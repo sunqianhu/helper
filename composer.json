@@ -3,7 +3,7 @@
     "description": "php助手类，包括数组、字符串、文件和图片等操作类",
     "autoload": {
         "psr-4": {
-            "Sunqianhu\\Helper\\": "src/"
+            "sunqianhu\\helper\\": "src/"
         }
     },
     "authors": [
