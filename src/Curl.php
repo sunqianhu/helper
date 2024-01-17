@@ -33,9 +33,9 @@ class Curl
      * @param $option
      * @return void
      */
-    public function replaceOptions($options)
+    public function replaceOptions($option)
     {
-        $this->options = $options;
+        $this->options = $option;
     }
 
     /**

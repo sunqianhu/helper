@@ -2,7 +2,7 @@
 
 namespace sunqianhu\helper;
 
-class ArrayHelper
+class ArrayHandler
 {
     /**
      * 转换为树数组
@@ -41,9 +41,8 @@ class ArrayHelper
      * @param $field
      * @return void
      */
-    function rsortTwoDimensional(&$array, $field)
-    {
-        usort($array, function ($item1, $item2) use ($field) {
+    function rsortTwoDimensional(&$array, $field){
+        usort($array, function($item1, $item2) use($field) {
             return $item2[$field] - $item1[$field];
         });
     }
