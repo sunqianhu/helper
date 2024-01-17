@@ -1,6 +1,8 @@
 {
     "name": "sunqianhu/helper",
     "description": "php助手类，包括数组、字符串、文件和图片等操作类",
+    "type": "library",
+    "license": "Apache-2.0",
     "autoload": {
         "psr-4": {
             "sunqianhu\\helper\\": "src/"
