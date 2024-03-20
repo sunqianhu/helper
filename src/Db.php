@@ -2,16 +2,23 @@
 
 namespace sunqianhu\helper;
 
+use sunqanhu\helper\Config as ConfigHelper;
+use Exception;
+
+/**
+ * 数据库助手类
+ */
 class Db
 {
-    static public $pdo;
-    public $type = 'mysql';
-    public $host = '127.0.0.1';
-    public $port = '3306';
-    public $dbname = 'test';
-    public $username = 'root';
+    static public $pdos = [];
+    public $id = '';
+    public $type = '';
+    public $host = '';
+    public $port = '';
+    public $dbname = '';
+    public $username = '';
     public $password = '';
-    public $charset = 'utf8mb4';
+    public $charset = '';
 
     /**
      * 构造函数
@@ -19,27 +26,23 @@ class Db
      */
     public function __construct($config = [])
     {
-        if (isset($config['type'])) {
-            $this->type = $config['type'];
+        if (empty($config)) {
+            $configHelper = new ConfigHelper();
+            $config = $configHelper->get('database');
         }
-        if (isset($config['host'])) {
-            $this->host = $config['host'];
+        $this->id = md5(implode('|', $config));
+
+        if ($this->getPdo()) {
+            return;
         }
-        if (isset($config['port'])) {
-            $this->port = $config['port'];
-        }
-        if (isset($config['dbname'])) {
-            $this->dbname = $config['dbname'];
-        }
-        if (isset($config['username'])) {
-            $this->username = $config['username'];
-        }
-        if (isset($config['password'])) {
-            $this->password = $config['password'];
-        }
-        if (isset($config['charset'])) {
-            $this->charset = $config['charset'];
-        }
+
+        $this->type = $config['type'];
+        $this->host = $config['host'];
+        $this->port = $config['port'];
+        $this->dbname = $config['dbname'];
+        $this->username = $config['username'];
+        $this->password = $config['password'];
+        $this->charset = $config['charset'];
 
         $this->connect();
     }
@@ -50,17 +53,24 @@ class Db
      */
     public function connect()
     {
-        if (self::$pdo) {
-            return;
-        }
-
         $dsn = $this->type .
             ':host=' . $this->host .
             ';port=' . $this->port .
             ';dbname=' . $this->dbname .
             ';charset=' . $this->charset;
         $pdo = new \PDO($dsn, $this->username, $this->password);
-        self::$pdo = $pdo;
+        self::$pdos[$this->id] = $pdo;
+    }
+
+    /**
+     * 得到pdo对象
+     */
+    public function getPdo()
+    {
+        if (isset(self::$pdos[$this->id])) {
+            return self::$pdos[$this->id];
+        }
+        return null;
     }
 
     /**
@@ -77,7 +87,7 @@ class Db
             throw new Exception('sql不能为空');
         }
 
-        $pdo = self::$pdo;
+        $pdo = $this->getPdo();
         $pdoStatement = $pdo->prepare($sql);
         if ($pdoStatement === false) {
             $error = $this->getPdoError();
@@ -162,7 +172,7 @@ class Db
      */
     public function getPdoError()
     {
-        $pdo = self::$pdo;
+        $pdo = $this->getPdo();
         $errors = array();
         $error = '';
 
