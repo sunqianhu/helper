@@ -22,3 +22,12 @@ php助手类包含项目开发过程中各种常用的类。
 
 ## Time时间类 
 - getFragmentName 得到时间段名称
+
+## Desensitization脱敏类
+- getPhoneAddStar 得到手机号码加星
+- getIdNumberAddStar 得到身份证号码加星
+- getNameAddStar 得到姓名加星
+
+## IdNumber身份证号码类
+- getGenderId 得到性别id
+- getBirthday 得到生日
