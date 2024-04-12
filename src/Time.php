@@ -38,4 +38,43 @@ class Time
 
         return $name;
     }
+
+    /**
+     * 得到秒转为可读的时间
+     * @return void
+     */
+    public function getSecondToReadableTime($second) {
+        $year = floor($second / (365*24*3600));
+        $remainder = $second % (365*24*3600);
+        $month = floor($remainder / (30*24*3600));
+        $remainder = $remainder % (30*24*3600);
+        $day = floor($remainder / (24*3600));
+        $remainder = $remainder % (24*3600);
+        $hour = floor($remainder / 3600);
+        $remainder = $remainder % 3600;
+        $minute = floor($remainder / 60);
+        $second = $remainder % 60;
+
+        $readableTime = '';
+        if ($year > 0) {
+            $readableTime .= $year.'年';
+        }
+        if ($month > 0) {
+            $readableTime .= $month.'月';
+        }
+        if ($day > 0) {
+            $readableTime .= $day.'日';
+        }
+        if ($hour > 0) {
+            $readableTime .= $hour.'小时';
+        }
+        if ($minute > 0) {
+            $readableTime .= $minute.'分钟';
+        }
+        if ($second > 0) {
+            $readableTime .= $second.'秒';
+        }
+
+        return $readableTime;
+    }
 }
