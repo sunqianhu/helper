@@ -2,7 +2,7 @@
 
 namespace Sunqianhu\Helper;
 
-use sunqanhu\helper\Config as ConfigHelper;
+use Sunqianhu\Helper\Config as ConfigHelper;
 use Exception;
 
 /**
