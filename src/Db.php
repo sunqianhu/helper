@@ -1,6 +1,6 @@
 <?php
 
-namespace sunqianhu\helper;
+namespace Sunqianhu\Helper;
 
 use sunqanhu\helper\Config as ConfigHelper;
 use Exception;

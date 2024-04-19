@@ -1,6 +1,6 @@
 <?php
 
-namespace sunqianhu\helper;
+namespace Sunqianhu\Helper;
 
 class Captcha
 {
@@ -46,7 +46,7 @@ class Captcha
 
         // 验证码
         $color = imagecolorallocate($this->image, rand(0, 150), rand(0, 150), rand(0, 150));
-        $font = __DIR__ . '/heiti.ttf';
+        $font = __DIR__ . '/asset/heiti.ttf';
         imagettftext($this->image, rand(15, 25), rand(-15, 15), rand(5, 10), rand(15, 30), $color, $font, $this->code[0]);
         imagettftext($this->image, rand(15, 25), rand(-15, 15), rand(30, 40), rand(15, 30), $color, $font, $this->code[1]);
         imagettftext($this->image, rand(15, 25), rand(-15, 15), rand(60, 70), rand(15, 30), $color, $font, $this->code[2]);
