@@ -1,5 +1,5 @@
 {
-    "name": "Sunqianhu/Helper",
+    "name": "sunqianhu/helper",
     "description": "php助手类包含项目开发过程中各种常用的类",
     "type": "library",
     "license": "Apache-2.0",
