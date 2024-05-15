@@ -3,6 +3,7 @@
 namespace Sunqianhu\Helper;
 
 use Sunqianhu\Helper\Config as ConfigHelper;
+use PDO;
 use Exception;
 
 /**
@@ -58,7 +59,11 @@ class Db
             ';port=' . $this->port .
             ';dbname=' . $this->dbname .
             ';charset=' . $this->charset;
-        $pdo = new \PDO($dsn, $this->username, $this->password);
+        $pdo = new PDO($dsn, $this->username, $this->password, [
+            PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+            PDO::ATTR_EMULATE_PREPARES => false, //关闭模拟预处理
+            PDO::ATTR_STRINGIFY_FETCHES => false //禁止将数值转换为字符串
+        ]);
         self::$pdos[$this->id] = $pdo;
     }
 
@@ -115,7 +120,7 @@ class Db
      * @param integer $type 返回内容格式
      * @return array
      */
-    public function fetchAll($pdoStatement, $type = \PDO::FETCH_ASSOC)
+    public function fetchAll($pdoStatement, $type = PDO::FETCH_ASSOC)
     {
         $datas = array();
 
@@ -134,7 +139,7 @@ class Db
      * @param integer $type 返回内容格式
      * @return array
      */
-    public function fetch($pdoStatement, $type = \PDO::FETCH_ASSOC)
+    public function fetch($pdoStatement, $type = PDO::FETCH_ASSOC)
     {
         $data = array();
 
