@@ -46,4 +46,29 @@ class ArrayHandler
             return $item2[$field] - $item1[$field];
         });
     }
+
+    /**
+     * 得到指定key的集合
+     * @param $data
+     * @param $keys
+     * @return void
+     */
+    function getDesignatedKeyList($data, $keys)
+    {
+        $list = [];
+        foreach ($keys as $key => $value) {
+            if (!is_numeric($key)) {
+                if (isset($data[$key])) {
+                    $list[$key] = $data[$key];
+                } else {
+                    $list[$key] = $value;
+                }
+            } else {
+                if (isset($data[$value])) {
+                    $list[$value] = $data[$value];
+                }
+            }
+        }
+        return $list;
+    }
 }
