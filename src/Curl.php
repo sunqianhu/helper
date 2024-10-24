@@ -103,7 +103,7 @@ class Curl
             curl_setopt($ch, $key, $option);
         }
         curl_setopt($ch, CURLOPT_POST, true);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, $fields);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($fields));
         $response = curl_exec($ch);
 
         if ($response === false) {
