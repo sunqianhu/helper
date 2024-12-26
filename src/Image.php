@@ -2,20 +2,26 @@
 
 namespace Sunqianhu\Helper;
 
+use Exception;
+
 class Image
 {
     /**
-     * 缩略图
-     * @param $sourcePath 原图片路径
-     * @param $thumbnailPath 缩略图路径
-     * @param $width 缩略到的宽度
-     * @param $height 缩略到的高度
-     * @param $quality 图片质量，当图片是png或gif时无效
+     * 创建缩略图
+     * @param $sourcePath
+     * @param $thumbnailPath
+     * @param $maxSize
+     * @param int $quality
+     * @throws Exception
      */
-    public function thumbnail($sourcePath, $thumbnailPath, $width, $height, $quality = 100)
+    public function createThumbnail($sourcePath, $thumbnailPath, $maxSize, $quality = 100)
     {
         // 获取原始图片的信息
         list($sourceWidth, $sourceHeight, $sourceType) = getimagesize($sourcePath);
+
+        if ($sourceType !== IMAGETYPE_JPEG && $sourceType !== IMAGETYPE_PNG && $sourceType !== IMAGETYPE_GIF) {
+            throw new Exception('此图片类型不支持缩略');
+        }
 
         // 创建源图片的资源
         $sourceImage = null;
@@ -25,6 +31,9 @@ class Image
                 break;
             case IMAGETYPE_PNG:
                 $sourceImage = imagecreatefrompng($sourcePath);
+                // 保持PNG透明度
+                imagealphablending($sourceImage, false);
+                imagesavealpha($sourceImage, true);
                 break;
             case IMAGETYPE_GIF:
                 $sourceImage = imagecreatefromgif($sourcePath);
@@ -37,8 +46,26 @@ class Image
             throw new Exception('原图像画布创建失败');
         }
 
+        // 计算缩放比例
+        if ($sourceWidth > $sourceHeight) {
+            $ratio = $maxSize / $sourceWidth;
+        } else {
+            $ratio = $maxSize / $sourceHeight;
+        }
+
+        $newWidth = $sourceWidth * $ratio;
+        $newHeight = $sourceHeight * $ratio;
+
         // 创建缩略图的资源
-        $thumbnailImage = imagecreatetruecolor($width, $height);
+        $thumbnailImage = imagecreatetruecolor($newWidth, $newHeight);
+
+        // 对于PNG文件，设置透明度处理
+        if ($sourceType == IMAGETYPE_PNG) {
+            imagealphablending($thumbnailImage, false);
+            imagesavealpha($thumbnailImage, true);
+            $transparent = imagecolorallocatealpha($thumbnailImage, 255, 255, 255, 127);
+            imagefill($thumbnailImage, 0, 0, $transparent);
+        }
 
         // 将原始图片缩放到缩略图尺寸
         imagecopyresampled(
@@ -48,8 +75,8 @@ class Image
             0,
             0,
             0,
-            $width,
-            $height,
+            $newWidth,
+            $newHeight,
             $sourceWidth,
             $sourceHeight
         );
