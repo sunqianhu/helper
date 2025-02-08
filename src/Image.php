@@ -53,8 +53,8 @@ class Image
             $ratio = $maxSize / $sourceHeight;
         }
 
-        $newWidth = $sourceWidth * $ratio;
-        $newHeight = $sourceHeight * $ratio;
+        $newWidth = intval($sourceWidth * $ratio);
+        $newHeight = intval($sourceHeight * $ratio);
 
         // 创建缩略图的资源
         $thumbnailImage = imagecreatetruecolor($newWidth, $newHeight);
