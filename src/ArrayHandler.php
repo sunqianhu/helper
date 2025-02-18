@@ -43,7 +43,13 @@ class ArrayHandler
      */
     function rsortTwoDimensional(&$array, $field){
         usort($array, function($item1, $item2) use($field) {
-            return $item2[$field] - $item1[$field];
+            $difference = $item2['distance'] - $item1['distance'];
+            if($difference>0){
+                return 1;
+            }else if ($difference<0){
+                return -1;
+            }
+            return 0;
         });
     }
 
