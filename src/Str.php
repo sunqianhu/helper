@@ -2,7 +2,7 @@
 
 namespace Sunqianhu\Helper;
 
-class StringHandler
+class Str
 {
     /**
      * 字符串长度

@@ -2,7 +2,7 @@
 
 namespace Sunqianhu\Helper;
 
-class ArrayHandler
+class Arr
 {
     /**
      * 转换为树数组
@@ -39,17 +39,36 @@ class ArrayHandler
      * 按某字段降序排序二维数组
      * @param $array
      * @param $field
-     * @return void
+     * @return bool
      */
-    function rsortTwoDimensional(&$array, $field){
-        usort($array, function($item1, $item2) use($field) {
-            $difference = $item2['distance'] - $item1['distance'];
-            if($difference>0){
-                return 1;
-            }else if ($difference<0){
-                return -1;
+    function twoDimensionalRsort(&$array, $field) {
+        return usort($array, function($item1, $item2) use($field) {
+            // 获取两个字段的值
+            $value1 = isset($item1[$field]) ? $item1[$field] : null;
+            $value2 = isset($item2[$field]) ? $item2[$field] : null;
+
+            // 如果两个值都为null，则认为它们相等
+            if ($value1 === null && $value2 === null) {
+                return 0;
             }
-            return 0;
+
+            // 如果其中一个值不存在，优先考虑存在的那个
+            if ($value1 !== null && $value2 === null) {
+                return 1;  // $item1 排在 $item2 前面
+            } elseif ($value1 === null && $value2 !== null) {
+                return -1; // $item1 排在 $item2 后面
+            }
+
+            // 处理数值比较
+            if (is_numeric($value1) && is_numeric($value2)) {
+                if ($value2 == $value1) {
+                    return 0;
+                }
+                return ($value2 > $value1) ? -1 : 1; // 倒序排列
+            }
+
+            // 默认使用strcmp进行字符串比较，并明确倒序排列
+            return -strcmp((string)$value1, (string)$value2); // 明确倒序排列
         });
     }
 

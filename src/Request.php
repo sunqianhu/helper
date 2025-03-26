@@ -20,8 +20,8 @@ class Request
             return $data;
         }
 
-        $arrayHandler = new ArrayHandler();
-        return $arrayHandler->getDesignatedKeyList($data, $keys);
+        $arr = new Arr();
+        return $arr->getDesignatedKeyList($data, $keys);
     }
 
     /**
@@ -39,8 +39,8 @@ class Request
             return $data;
         }
 
-        $arrayHandler = new ArrayHandler();
-        return $arrayHandler->getDesignatedKeyList($data, $keys);
+        $arr = new Arr();
+        return $arr->getDesignatedKeyList($data, $keys);
     }
 
     /**
@@ -58,7 +58,7 @@ class Request
             return $data;
         }
 
-        $arrayHandler = new ArrayHandler();
-        return $arrayHandler->getDesignatedKeyList($data, $keys);
+        $arr = new Arr();
+        return $arr->getDesignatedKeyList($data, $keys);
     }
 }

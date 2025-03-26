@@ -2,7 +2,7 @@
 
 namespace Sunqianhu\Helper;
 
-use Sunqianhu\Helper\Config as ConfigHelper;
+use Sunqianhu\Helper\Config;
 use PDO;
 use Exception;
 
@@ -28,8 +28,8 @@ class Db
     public function __construct($config = [])
     {
         if (empty($config)) {
-            $configHelper = new ConfigHelper();
-            $config = $configHelper->get('database');
+            $config = new Config();
+            $config = $config->get('database');
         }
         $this->id = md5(implode('|', $config));
 
