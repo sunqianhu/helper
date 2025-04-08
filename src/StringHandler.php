@@ -2,7 +2,7 @@
 
 namespace Sunqianhu\Helper;
 
-class Str
+class StringHandler
 {
     /**
      * 字符串长度
@@ -11,9 +11,8 @@ class Str
      */
     function length($string)
     {
-        $matchs = array();
+        $match = array();
         $length = 0;
-
         if ($string === '') {
             return $length;
         }
@@ -21,8 +20,8 @@ class Str
         if (function_exists('mb_utf8length')) {
             $length = mb_utf8length($string, 'utf-8');
         } else {
-            preg_match_all('/./u', $string, $matchs);
-            $length = count($matchs[0]);
+            preg_match_all('/./u', $string, $match);
+            $length = count($match[0]);
         }
 
         return $length;
@@ -38,7 +37,7 @@ class Str
     function sub($string, $start, $length)
     {
         $new = '';
-        $matchs = array();
+        $match = array();
 
         if ($string === '') {
             return $new;
@@ -47,8 +46,8 @@ class Str
         if (function_exists('mb_substr')) {
             $new = mb_substr($string, $start, $length, 'utf-8');
         } else {
-            preg_match_all('/./u', $string, $matchs);
-            $new = join('', array_slice($matchs[0], $start, $length));
+            preg_match_all('/./u', $string, $match);
+            $new = join('', array_slice($match[0], $start, $length));
         }
 
         return $new;
@@ -62,20 +61,14 @@ class Str
      */
     function zeroEllipsisSub($string, $length)
     {
-        $new = '';
-        $total = 0; // 字符串总长度
-
         if ($string === '') {
             return $string;
         }
-
         $total = $this->length($string);
         if ($total <= $length) {
             return $string;
         }
-
-        $new = $this->sub($string, 0, $length) . '...';
-        return $new;
+        return $this->sub($string, 0, $length) . '...';
     }
 
     /**
@@ -93,30 +86,28 @@ class Str
         $word = str_replace('_', ' ', $word);
         $word = ucwords($word, $delimiters);
         $word = str_replace($delimiters, '', $word);
-        $word = lcfirst($word);
-
-        return $word;
+        return lcfirst($word);
     }
 
     /**
      * 分隔排序
      * @param $string
      * @param $sort
-     * @return void
+     * @return string
      */
-    function delimiterSort($string, $sort = 'asc', $delimiter = ',')
+    function delimiterSort($string, $sort = 'asc', $delimiter = ',', $glue = ',')
     {
         if (empty($string)) {
             return $string;
         }
 
-        $array = explode(',', $string);
+        $array = explode($delimiter, $string);
         if ($sort == 'desc') {
             arsort($array);
         } else {
             sort($array);
         }
 
-        return implode($delimiter, $array);
+        return implode($glue, $array);
     }
 }

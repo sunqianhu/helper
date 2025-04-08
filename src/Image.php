@@ -7,24 +7,23 @@ use Exception;
 class Image
 {
     /**
-     * 创建缩略图
+     * 生成缩略图
      * @param $sourcePath
      * @param $thumbnailPath
      * @param $maxSize
      * @param int $quality
      * @throws Exception
      */
-    public function createThumbnail($sourcePath, $thumbnailPath, $maxSize, $quality = 100)
+    public function generateThumbnail($sourcePath, $thumbnailPath, $maxSize, $quality = 100)
     {
-        // 获取原始图片的信息
+        //获取原始图片的信息
         list($sourceWidth, $sourceHeight, $sourceType) = getimagesize($sourcePath);
 
         if ($sourceType !== IMAGETYPE_JPEG && $sourceType !== IMAGETYPE_PNG && $sourceType !== IMAGETYPE_GIF) {
             throw new Exception('此图片类型不支持缩略');
         }
 
-        // 创建源图片的资源
-        $sourceImage = null;
+        //创建源图片的资源
         switch ($sourceType) {
             case IMAGETYPE_JPEG:
                 $sourceImage = imagecreatefromjpeg($sourcePath);
@@ -41,12 +40,11 @@ class Image
             default:
                 throw new Exception('此图片类型不支持缩略');
         }
-
         if (!$sourceImage) {
             throw new Exception('原图像画布创建失败');
         }
 
-        // 计算缩放比例
+        //计算缩放比例
         if ($sourceWidth > $sourceHeight) {
             $ratio = $maxSize / $sourceWidth;
         } else {
@@ -56,10 +54,10 @@ class Image
         $newWidth = intval($sourceWidth * $ratio);
         $newHeight = intval($sourceHeight * $ratio);
 
-        // 创建缩略图的资源
+        //创建缩略图的资源
         $thumbnailImage = imagecreatetruecolor($newWidth, $newHeight);
 
-        // 对于PNG文件，设置透明度处理
+        //对于PNG文件，设置透明度处理
         if ($sourceType == IMAGETYPE_PNG) {
             imagealphablending($thumbnailImage, false);
             imagesavealpha($thumbnailImage, true);
@@ -67,7 +65,7 @@ class Image
             imagefill($thumbnailImage, 0, 0, $transparent);
         }
 
-        // 将原始图片缩放到缩略图尺寸
+        //将原始图片缩放到缩略图尺寸
         imagecopyresampled(
             $thumbnailImage,
             $sourceImage,
@@ -81,7 +79,7 @@ class Image
             $sourceHeight
         );
 
-        // 保存缩略图
+        //保存缩略图
         switch ($sourceType) {
             case IMAGETYPE_JPEG:
                 imagejpeg($thumbnailImage, $thumbnailPath, $quality);
@@ -96,7 +94,7 @@ class Image
                 throw new Exception('此图片类型不支持缩略');
         }
 
-        // 释放资源
+        //释放资源
         imagedestroy($thumbnailImage);
         imagedestroy($sourceImage);
     }

@@ -2,7 +2,6 @@
 
 namespace Sunqianhu\Helper;
 
-use Sunqianhu\Helper\Config;
 use PDO;
 use Exception;
 
@@ -32,10 +31,6 @@ class Db
             $config = $config->get('database');
         }
         $this->id = md5(implode('|', $config));
-
-        if ($this->getPdo()) {
-            return;
-        }
 
         $this->type = $config['type'];
         $this->host = $config['host'];
@@ -69,13 +64,14 @@ class Db
 
     /**
      * 得到pdo对象
+     * @throws Exception
      */
     public function getPdo()
     {
-        if (isset(self::$pdos[$this->id])) {
-            return self::$pdos[$this->id];
+        if (!isset(self::$pdos[$this->id])) {
+            throw new Exception('pdo对象不存在');
         }
-        return null;
+        return self::$pdos[$this->id];
     }
 
     /**
@@ -85,6 +81,7 @@ class Db
      * @param string $sql sql
      * @param array $data 数据
      * @return PDOStatement PDOStatement对象
+     * @throws Exception
      */
     public function execute($sql, $data = array())
     {
@@ -99,8 +96,12 @@ class Db
             throw new Exception($error);
         }
         foreach ($data as $param => $value) {
-            if (is_array($value) && count($value) > 1) {
-                $pdoStatement->bindValue($param, $value[0], $value[1]);
+            if (is_array($value)) {
+                if (count($value) == 1) {
+                    $pdoStatement->bindValue($param, $value[0]);
+                }else{
+                    $pdoStatement->bindValue($param, $value[0], $value[1]);
+                }
             } else {
                 $pdoStatement->bindValue($param, $value);
             }
@@ -122,14 +123,11 @@ class Db
      */
     public function fetchAll($pdoStatement, $type = PDO::FETCH_ASSOC)
     {
-        $datas = array();
-
-        $datas = $pdoStatement->fetchAll($type);
-        if (empty($datas)) {
-            return array();
+        $list = $pdoStatement->fetchAll($type);
+        if (empty($list)) {
+            return [];
         }
-
-        return $datas;
+        return $list;
     }
 
     /**
@@ -141,14 +139,11 @@ class Db
      */
     public function fetch($pdoStatement, $type = PDO::FETCH_ASSOC)
     {
-        $data = array();
-
-        $data = $pdoStatement->fetch($type);
-        if (empty($data)) {
-            return array();
+        $row = $pdoStatement->fetch($type);
+        if (empty($row)) {
+            return [];
         }
-
-        return $data;
+        return $row;
     }
 
     /**
@@ -160,13 +155,10 @@ class Db
      */
     public function fetchColumn($pdoStatement, $columnNumber = 0)
     {
-        $field = '';
-
         $field = $pdoStatement->fetchColumn($columnNumber);
         if ($field === false) {
             return '';
         }
-
         return $field;
     }
 
@@ -178,9 +170,7 @@ class Db
     public function getPdoError()
     {
         $pdo = $this->getPdo();
-        $errors = array();
         $error = '';
-
         $errors = $pdo->errorInfo();
         if (!empty($errors[0])) {
             $error .= 'SQLSTATE[' . $errors[0] . ']';
@@ -191,7 +181,6 @@ class Db
         if (!empty($errors[2])) {
             $error .= '，驱动错误描述：' . $errors[2];
         }
-
         return $error;
     }
 
@@ -202,9 +191,7 @@ class Db
      */
     public function getPodStatementError($pdoStatement)
     {
-        $errors = array();
         $error = '';
-
         if (!$pdoStatement) {
             $error = 'pdostatement对象为false';
             return $error;

@@ -17,7 +17,6 @@ class Time
         }
 
         $hour = date('G', $time);
-        $name = '';
         if ($hour >= 0 && $hour < 5) {
             $name = '凌晨';
         } else if ($hour >= 5 && $hour < 8) {
@@ -41,7 +40,7 @@ class Time
 
     /**
      * 得到秒转为可读的时间
-     * @return void
+     * @return string
      */
     public function getSecondToReadableTime($second) {
         $year = floor($second / (365*24*3600));

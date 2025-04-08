@@ -1,14 +1,16 @@
 <?php
 namespace Sunqianhu\Helper;
 
+use Exception;
+
 class IdNumber
 {
     /**
-     * 得到性别id
+     * 得到性别
      * @param $idNumber
      * @return int
      */
-    public function getGenderId($idNumber){
+    public function getGender($idNumber){
         $genderId = 0;
         if(strlen($idNumber) != 18){
             return $genderId;
@@ -16,9 +18,9 @@ class IdNumber
 
         $penultimate = substr($idNumber, -2, 1);
         if($penultimate % 2 == 1){
-            $genderId = 1;
+            $genderId = 0;
         }else{
-            $genderId = 2;
+            $genderId = 1;
         }
 
         return $genderId;
@@ -28,18 +30,16 @@ class IdNumber
      * 得到生日
      * @param $idNumber
      * @return int
+     * @throws Exception
      */
     public function getBirthday($idNumber){
-        $birthday = 0;
         if(strlen($idNumber) != 18){
-            return $birthday;
+            throw new Exception('身份证号码必须是18位');
         }
 
         $year = substr($idNumber, 6, 4);
         $month = substr($idNumber, 10, 2);
         $day = substr($idNumber, 12, 2);
-        $birthday = strtotime($year.'-'.$month.'-'.$day);
-
-        return $birthday;
+        return strtotime($year.'-'.$month.'-'.$day);
     }
 }

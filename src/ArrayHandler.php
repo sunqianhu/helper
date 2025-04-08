@@ -2,7 +2,7 @@
 
 namespace Sunqianhu\Helper;
 
-class Arr
+class ArrayHandler
 {
     /**
      * 转换为树数组
@@ -73,12 +73,12 @@ class Arr
     }
 
     /**
-     * 得到指定key的集合
+     * 得到指定keys的集合
      * @param $data
      * @param $keys
      * @return void
      */
-    function getDesignatedKeyList($data, $keys)
+    function getDesignatedKeysList($data, $keys)
     {
         $list = [];
         foreach ($keys as $key => $value) {
