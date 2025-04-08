@@ -27,7 +27,7 @@ class Config
         if (isset(self::$cache[$file])) {
             $fileConfig = self::$cache[$file];
         }else{
-            $fileConfig = require self::getFileConfig($file);
+            $fileConfig = self::getFileConfig($file);
             self::$cache[$file] = $fileConfig;
         }
 
