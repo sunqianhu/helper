@@ -16,7 +16,7 @@
     ],
     "require": {},
     "scripts": {
-        "post-install-cmd": [
+        "post-autoload-dump": [
             "Sunqianhu\\Helper\\Installer::install"
         ]
     }
