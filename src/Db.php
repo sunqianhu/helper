@@ -28,7 +28,7 @@ class Db
     {
         if (empty($config)) {
             $config = new Config();
-            $config = $config->get('database');
+            $config = $config->get('databases');
         }
         $this->id = md5(implode('|', $config));
 

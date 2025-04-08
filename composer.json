@@ -1,6 +1,6 @@
 {
     "name": "sunqianhu/helper",
-    "description": "php助手类包含项目开发过程中各种常用的类",
+    "description": "php助手类包含项目开发过程中各种常用的工具类",
     "type": "library",
     "license": "Apache-2.0",
     "autoload": {
@@ -14,5 +14,10 @@
             "email": "469661426@qq.com"
         }
     ],
-    "require": {}
+    "require": {},
+    "scripts": {
+        "post-install-cmd": [
+            "Sunqianhu\\Helper\\Installer::install"
+        ]
+    }
 }
