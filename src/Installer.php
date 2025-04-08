@@ -20,7 +20,7 @@ class Installer
             }
         }
 
-        //数据库配置文件
+        //数据库
         $targetDbPath = $configFullPath . '/databases.php';
         if(!file_exists($targetDbPath)){
             $sourceDbPath = __DIR__ . '/config/databases.php';
@@ -29,7 +29,16 @@ class Installer
             }
         }
 
-        //文件日志配置文件
+        //文件
+        $targetFileLogPath = $configFullPath . '/file.php';
+        if(!file_exists($targetFileLogPath)){
+            $sourceFileLogPath = __DIR__ . '/config/file.php';
+            if(!copy($sourceFileLogPath, $targetFileLogPath)){
+                throw new Exception("拷贝文件配置失败：{$sourceFileLogPath} > {$targetFileLogPath}");
+            }
+        }
+
+        //文件日志
         $targetFileLogPath = $configFullPath . '/file_log.php';
         if(!file_exists($targetFileLogPath)){
             $sourceFileLogPath = __DIR__ . '/config/file_log.php';
