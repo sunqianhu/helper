@@ -16,8 +16,7 @@ class FileLog
     public function __construct($config = [])
     {
         if (empty($config)) {
-            $config = new Config();
-            $config = $config->get('file_log');
+            $config = Config::get('file_log');
         }
         if(empty($config['full_path'])){
             throw new Exception('请配置文件日志路径');

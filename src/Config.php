@@ -2,23 +2,60 @@
 
 namespace Sunqianhu\Helper;
 
+use Exception;
+
 class Config
 {
     /**
-     * 获取值
+     * 得到配置
+     * @var array
      */
-    public function get($name){
-        $names = explode('.', $name);
-        $data = require(dirname(__DIR__, 4).'/config/'.$names[0].'.php');
-        if(count($names) == 1) {
-            $value = $data;
-        }elseif(count($names) == 2){
-            $value = $data[$names[1]];
-        }elseif(count($names) == 3){
-            $value = $data[$names[1]][$names[2]];
+    private static $cache = [];
+
+    /**
+     * 获取配置值
+     * @param $name
+     * @return array|mixed|null
+     * @throws Exception
+     */
+    public static function get($name)
+    {
+        $keys = explode('.', $name);
+        $file = $keys[0];
+
+        //加载配置
+        if (isset(self::$cache[$file])) {
+            $fileConfig = self::$cache[$file];
         }else{
-            $value = $data[$names[1]][$names[2]][$names[3]];
+            $fileConfig = require self::getFileConfig($file);
+            self::$cache[$file] = $fileConfig;
         }
-        return $value;
+
+        $config = $fileConfig;
+        $fields = array_slice($keys, 1);
+        foreach ($fields as $field) {
+            if(!isset($config[$field])){
+                throw new Exception('配置项不存在：' . $field);
+            }
+            $config = $fileConfig[$field];
+        }
+
+        return $config;
+    }
+
+    /**
+     * 得到文件配置
+     * @param $file
+     * @return string
+     * @throws Exception
+     */
+    private static function getFileConfig($file)
+    {
+        $basePath = dirname(__DIR__, 4) . '/config/';
+        $path = $basePath . $file . '.php';
+        if (!file_exists($path)) {
+            throw new Exception('配置文件不存在：' . $path);
+        }
+        return require $path;
     }
 }

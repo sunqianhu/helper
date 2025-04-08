@@ -27,8 +27,7 @@ class Db
     public function __construct($config = [])
     {
         if (empty($config)) {
-            $config = new Config();
-            $config = $config->get('databases');
+            $config = Config::get('databases');
         }
         $this->id = md5(implode('|', $config));
 
