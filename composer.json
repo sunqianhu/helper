@@ -14,10 +14,5 @@
             "email": "469661426@qq.com"
         }
     ],
-    "require": {},
-    "scripts": {
-        "post-autoload-dump": [
-            "Sunqianhu\\Helper\\Installer::install"
-        ]
-    }
+    "require": {}
 }
