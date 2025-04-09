@@ -10,10 +10,11 @@ class SingletonFactory
 
     /**
      * 得到实例
-     * @param $class
+     * @param class-string<T> $class
      * @param ...$args
-     * @return mixed
+     * @return T
      * @throws Exception
+     * @template T
      */
     static public function getInstance($class, ...$args)
     {
