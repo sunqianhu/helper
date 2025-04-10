@@ -3,7 +3,7 @@ namespace Sunqianhu\Helper;
 
 use Exception;
 
-class IdNumber
+class IdNumberHandler
 {
     /**
      * 得到性别
