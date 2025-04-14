@@ -2,12 +2,12 @@
 
 namespace Sunqianhu\Helper;
 
-class Number
+class NumberHandler
 {
 
     /**
      * 格式化显示
-     * @param $time
+     * @param $number
      * @return string
      */
     function showFormat($number)
@@ -40,5 +40,20 @@ class Number
 
         //格式化数字并返回
         return number_format($number / pow(10, $digit - ($digit % 4)), 1) . $suffix;
+    }
+
+    /**
+     * 得到百分比
+     * @param $number1
+     * @param $number2
+     * @param $precision
+     * @return float
+     */
+    public function getPercentage($number1, $number2, $precision = 2)
+    {
+        if($number2 == 0){
+            return 0;
+        }
+        return round($number1 / $number2 * 100, $precision);
     }
 }
