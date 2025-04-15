@@ -51,9 +51,10 @@ class NumberHandler
      */
     public function getPercentage($number1, $number2, $precision = 2)
     {
-        if($number2 == 0){
+        $total = $number1 + $number2;
+        if($total == 0){
             return 0;
         }
-        return round($number1 / $number2 * 100, $precision);
+        return round($number1 / $total * 100, $precision);
     }
 }
