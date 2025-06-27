@@ -18,6 +18,12 @@ class Image
     {
         //获取原始图片的信息
         list($sourceWidth, $sourceHeight, $sourceType) = getimagesize($sourcePath);
+        if (!$sourceWidth || !$sourceHeight) {
+            throw new Exception('获取图片尺寸失败');
+        }
+        if ($sourceWidth <= $maxSize && $sourceHeight <= $maxSize) {
+            return;
+        }
 
         if ($sourceType !== IMAGETYPE_JPEG && $sourceType !== IMAGETYPE_PNG && $sourceType !== IMAGETYPE_GIF) {
             throw new Exception('此图片类型不支持缩略');
@@ -30,9 +36,6 @@ class Image
                 break;
             case IMAGETYPE_PNG:
                 $sourceImage = imagecreatefrompng($sourcePath);
-                // 保持PNG透明度
-                imagealphablending($sourceImage, false);
-                imagesavealpha($sourceImage, true);
                 break;
             case IMAGETYPE_GIF:
                 $sourceImage = imagecreatefromgif($sourcePath);
