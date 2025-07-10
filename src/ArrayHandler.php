@@ -76,7 +76,7 @@ class ArrayHandler
      * 得到指定keys的集合
      * @param $data
      * @param $keys
-     * @return void
+     * @return array
      */
     function getDesignatedKeysList($data, $keys)
     {
@@ -95,5 +95,23 @@ class ArrayHandler
             }
         }
         return $list;
+    }
+
+    /**
+     * 获取列字符串
+     * @param $array
+     * @param $column
+     * @param $separator
+     * @return string
+     */
+    function getColumnString($array, $column, $separator = ',')
+    {
+        if (!is_array($array)) {
+            return '';
+        }
+        if (!isset($array[0][$column])) {
+            return '';
+        }
+        return implode($separator, array_column($array, $column));
     }
 }

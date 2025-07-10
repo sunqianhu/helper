@@ -40,8 +40,8 @@ class Curl
 
     /**
      * 设置选项
-     * @param $key 键
-     * @param $value 值
+     * @param $key
+     * @param $value
      * @return void
      */
     public function setOption($key, $value)
@@ -64,8 +64,8 @@ class Curl
 
     /**
      * get请求
-     * @param string $url url
-     * @return string
+     * @param string $url
+     * @return bool|string
      * @throws Exception
      */
     public function get(string $url)
@@ -81,7 +81,7 @@ class Curl
             $errno = curl_errno($ch);
             $error = curl_error($ch);
             curl_close($ch);
-            throw new Exception('curl请求失败，错误号：' . $errno . ',' . '错误描述：' . $error);
+            throw new Exception('curl请求失败，请求网址：' . $url . '，错误号：' . $errno . '，' . '错误描述：' . $error);
         }
         curl_close($ch);
 
@@ -90,9 +90,9 @@ class Curl
 
     /**
      * post请求
-     * @param string $url 网址
-     * @param array $fields 字段
-     * @return string
+     * @param string $url
+     * @param $fields
+     * @return bool|string
      * @throws Exception
      */
     public function post(string $url, $fields = [])
@@ -103,14 +103,14 @@ class Curl
             curl_setopt($ch, $key, $option);
         }
         curl_setopt($ch, CURLOPT_POST, true);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($fields));
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $fields);
         $response = curl_exec($ch);
 
         if ($response === false) {
             $errno = curl_errno($ch);
             $error = curl_error($ch);
             curl_close($ch);
-            throw new Exception('curl请求失败，错误号：' . $errno . ',' . '错误描述：' . $error);
+            throw new Exception('curl请求失败，请求网址：' . $url . '，错误号：' . $errno . '，' . '错误描述：' . $error);
         }
         curl_close($ch);
 
