@@ -33,8 +33,8 @@ class ErrorHandler
         $errorType = isset($errorTypes[$errno]) ? $errorTypes[$errno] : '未知错误';
         $errfile = basename($errfile);
         $message = $errorType.'：'.$errstr.'，在文件'.$errfile.'的第'.$errline.'行';
-        $response = new Response();
-        echo $response->error($message);
+        $jsonResponse = new JsonResponse();
+        echo $jsonResponse->getError($message);
         exit;
     }
 }
