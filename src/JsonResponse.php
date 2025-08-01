@@ -5,12 +5,12 @@ namespace Sunqianhu\Helper;
 class JsonResponse
 {
     /**
-     * 得到成功
+     * 响应成功
      * @param $message
      * @param $data
      * @return false|string
      */
-    public function getSuccess($message, $data = null)
+    public function success($message, $data = null)
     {
         $response = [
             'code' => 1,
@@ -21,13 +21,13 @@ class JsonResponse
     }
 
     /**
-     * 得到失败
+     * 响应失败
      * @param $message
      * @param $data
      * @param $code
      * @return false|string
      */
-    public function getError($message, $data = null, $code = 0)
+    public function error($message, $data = null, $code = 0)
     {
         $response = [
             'code' => $code,

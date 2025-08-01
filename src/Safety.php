@@ -7,7 +7,7 @@ class Safety
 
     /**
      * 递归使用反斜线引用字符串
-     * @param $time
+     * @param $data
      * @return string
      */
     public function addslashesRecursive($data)

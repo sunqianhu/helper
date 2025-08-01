@@ -74,8 +74,8 @@ class StringHandler
     /**
      * 转小帕斯卡
      * @param $word
-     * @param $split
-     * @return void
+     * @param string $delimiters
+     * @return string
      */
     function toSmallPascal($word, $delimiters = '/')
     {
@@ -92,7 +92,9 @@ class StringHandler
     /**
      * 分隔排序
      * @param $string
-     * @param $sort
+     * @param string $sort
+     * @param string $delimiter
+     * @param string $glue
      * @return string
      */
     function delimiterSort($string, $sort = 'asc', $delimiter = ',', $glue = ',')

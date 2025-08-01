@@ -98,13 +98,13 @@ class ArrayHandler
     }
 
     /**
-     * 获取列字符串
+     * 获取多列的字符串表示
      * @param $array
      * @param $column
      * @param $separator
      * @return string
      */
-    function getColumnString($array, $column, $separator = ',')
+    function getColumnsString($array, $column, $separator = ',')
     {
         if (!is_array($array)) {
             return '';

@@ -4,10 +4,8 @@ namespace Sunqianhu\Helper;
 
 use PDO;
 use Exception;
+use PDOStatement;
 
-/**
- * 数据库助手类
- */
 class Db
 {
     static public $pdos = [];
@@ -22,7 +20,8 @@ class Db
 
     /**
      * 构造函数
-     * @param $config
+     * @param array $config
+     * @throws Exception
      */
     public function __construct($config = [])
     {
@@ -64,6 +63,7 @@ class Db
     /**
      * 得到pdo对象
      * @throws Exception
+     * @return PDO
      */
     public function getPdo()
     {
@@ -76,13 +76,12 @@ class Db
     /**
      * 执行sql语句
      * @access public
-     * @param PDO $pdo pdo对象
      * @param string $sql sql
      * @param array $data 数据
      * @return PDOStatement PDOStatement对象
      * @throws Exception
      */
-    public function execute($sql, $data = array())
+    public function execute($sql, $data = [])
     {
         if (empty($sql)) {
             throw new Exception('sql不能为空');
@@ -90,10 +89,6 @@ class Db
 
         $pdo = $this->getPdo();
         $pdoStatement = $pdo->prepare($sql);
-        if ($pdoStatement === false) {
-            $error = $this->getPdoError();
-            throw new Exception($error);
-        }
         foreach ($data as $param => $value) {
             if (is_array($value)) {
                 if (count($value) == 1) {
@@ -105,42 +100,34 @@ class Db
                 $pdoStatement->bindValue($param, $value);
             }
         }
-        if (!$pdoStatement->execute()) {
-            $error = $this->getPodStatementError($pdoStatement);
-            throw new Exception($error);
-        }
-
+        $pdoStatement->execute();
         return $pdoStatement;
     }
 
     /**
      * 得到查询条件的全部数据
      * @access public
-     * @param PDO $pdoStatement 结果集对象
+     * @param PDOStatement $pdoStatement 结果集对象
      * @param integer $type 返回内容格式
      * @return array
      */
     public function fetchAll($pdoStatement, $type = PDO::FETCH_ASSOC)
     {
-        $list = $pdoStatement->fetchAll($type);
-        if (empty($list)) {
-            return [];
-        }
-        return $list;
+        return $pdoStatement->fetchAll($type);
     }
 
     /**
-     * 从结果集中获取下一行
+     * 提取列名数组
      * @access public
-     * @param PDO $pdoStatement 结果集对象
-     * @param integer $type 返回内容格式
+     * @param PDOStatement $pdoStatement 结果集对象
      * @return array
+     * @throws Exception
      */
-    public function fetch($pdoStatement, $type = PDO::FETCH_ASSOC)
+    public function fetch($pdoStatement)
     {
-        $row = $pdoStatement->fetch($type);
-        if (empty($row)) {
-            return [];
+        $row = $pdoStatement->fetch(PDO::FETCH_ASSOC);
+        if ($row === false) {
+            throw new Exception('没有找到记录');
         }
         return $row;
     }
@@ -148,65 +135,17 @@ class Db
     /**
      * 从结果集中的下一行返回单独的一列
      * @access public
-     * @param PDO $pdoStatement 结果集对象
-     * @param array $data 数据
-     * @return string
+     * @param PDOStatement $pdoStatement 结果集对象
+     * @param int $columnNumber
+     * @return mixed
+     * @throws Exception
      */
     public function fetchColumn($pdoStatement, $columnNumber = 0)
     {
         $field = $pdoStatement->fetchColumn($columnNumber);
-        if ($field === false) {
-            return '';
+        if($field === false){
+            throw new Exception('没有找到记录');
         }
         return $field;
-    }
-
-    /**
-     * 得到pdo错误描述
-     * @param PDO $pdo pdo对象
-     * @return string 错误描述
-     */
-    public function getPdoError()
-    {
-        $pdo = $this->getPdo();
-        $error = '';
-        $errors = $pdo->errorInfo();
-        if (!empty($errors[0])) {
-            $error .= 'SQLSTATE[' . $errors[0] . ']';
-        }
-        if (!empty($errors[1])) {
-            $error .= '，驱动错误代码：' . $errors[1];
-        }
-        if (!empty($errors[2])) {
-            $error .= '，驱动错误描述：' . $errors[2];
-        }
-        return $error;
-    }
-
-    /**
-     * 得到预处理结果对象错误描述
-     * @param PDOStatement $pdoStatement 结果集对象
-     * @return string 错误描述
-     */
-    public function getPodStatementError($pdoStatement)
-    {
-        $error = '';
-        if (!$pdoStatement) {
-            $error = 'pdostatement对象为false';
-            return $error;
-        }
-
-        $errors = $pdoStatement->errorInfo();
-        if (!empty($errors[0])) {
-            $error .= 'SQLSTATE[' . $errors[0] . ']';
-        }
-        if (!empty($errors[1])) {
-            $error .= '，驱动错误代码：' . $errors[1];
-        }
-        if (!empty($errors[2])) {
-            $error .= '，驱动错误描述：' . $errors[2];
-        }
-
-        return $error;
     }
 }

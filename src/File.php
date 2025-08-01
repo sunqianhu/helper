@@ -23,6 +23,7 @@ class File
      * 得到全路径
      * @param $path
      * @return string
+     * @throws Exception
      */
     public function getFullPath($path){
         if($path === ''){
@@ -46,7 +47,7 @@ class File
             throw new Exception('文件不存在');
         }
         if(!is_file($fullPath)){
-            throw new Exception('只能删除文件');
+            throw new Exception('不是一个文件');
         }
         unlink($fullPath);
     }

@@ -15,6 +15,9 @@
         }
     ],
     "require": {
-      "ext-curl": "*"
+      "ext-curl": "*",
+      "ext-pdo": "*",
+      "ext-gd": "*",
+      "ext-zip": "*"
     }
 }

@@ -10,7 +10,7 @@ class NumberHandler
      * @param $number
      * @return string
      */
-    function showFormat($number)
+    function formatView($number)
     {
         //数字小于1万直接返回
         if ($number < 10000) {

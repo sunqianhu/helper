@@ -30,12 +30,12 @@ class Curl
 
     /**
      * 替换选项
-     * @param $option
+     * @param $options
      * @return void
      */
-    public function replaceOptions($option)
+    public function setOptions($options)
     {
-        $this->options = $option;
+        $this->options = $options;
     }
 
     /**
@@ -53,11 +53,12 @@ class Curl
      * 删除选项
      * @param $key
      * @return void
+     * @throws Exception
      */
     public function deleteOption($key)
     {
         if (!isset($this->options[$key])) {
-            return;
+            throw new Exception('选项不存在：' . $key);
         }
         unset($this->options[$key]);
     }

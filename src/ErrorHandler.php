@@ -30,11 +30,11 @@ class ErrorHandler
             E_DEPRECATED        => '已废弃',
             E_USER_DEPRECATED   => '用户已废弃',
         ];
-        $errorType = isset($errorTypes[$errno]) ? $errorTypes[$errno] : '未知错误';
-        $errfile = basename($errfile);
-        $message = $errorType.'：'.$errstr.'，在文件'.$errfile.'的第'.$errline.'行';
+        $errorType = $errorTypes[$errno] ?? '未知错误';
+        $baseName = basename($errfile);
+        $message = $errorType.'：'.$errstr.'，在文件'.$baseName.'的第'.$errline.'行';
         $jsonResponse = new JsonResponse();
-        echo $jsonResponse->getError($message);
+        echo $jsonResponse->error($message);
         exit;
     }
 }

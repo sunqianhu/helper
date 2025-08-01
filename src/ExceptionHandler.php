@@ -14,7 +14,7 @@ class ExceptionHandler
     public function handle(Throwable $exception)
     {
         $jsonResponse = new JsonResponse();
-        echo $jsonResponse->getError($exception->getMessage());
+        echo $jsonResponse->error($exception->getMessage());
         exit;
     }
 }
