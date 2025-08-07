@@ -18,6 +18,7 @@
       "ext-curl": "*",
       "ext-pdo": "*",
       "ext-gd": "*",
-      "ext-zip": "*"
+      "ext-zip": "*",
+      "topthink/framework": "8.1.2"
     }
 }
