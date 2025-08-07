@@ -11,19 +11,17 @@ class IdNumberHandler
      * @return int
      */
     public function getGender($idNumber){
-        $genderId = 0;
+        $gender = 0;
         if(strlen($idNumber) != 18){
-            return $genderId;
+            return $gender;
         }
 
         $penultimate = substr($idNumber, -2, 1);
-        if($penultimate % 2 == 1){
-            $genderId = 0;
-        }else{
-            $genderId = 1;
+        if($penultimate % 2 != 1){
+            $gender = 1;
         }
 
-        return $genderId;
+        return $gender;
     }
 
     /**

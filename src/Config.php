@@ -7,13 +7,13 @@ use Exception;
 class Config
 {
     /**
-     * 得到配置
+     * 缓存
      * @var array
      */
     private static $cache = [];
 
     /**
-     * 获取配置值
+     * 得到配置
      * @param $name
      * @return array|mixed|null
      * @throws Exception

@@ -8,7 +8,7 @@ class MarkDownHandler
      * 移除代码块的标记
      * @param $code
      * @param $flag
-     * @return array|string|string[]|null
+     * @return string
      */
     public function removeCodeFlag($code, $flag)
     {

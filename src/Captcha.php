@@ -118,9 +118,6 @@ class Captcha
 
     /**
      * 创建base64图片
-     * @param $code 验证码
-     * @param $this- >width 宽度
-     * @param $this- >height 高度
      * @return string
      */
     public function createBase64Image()

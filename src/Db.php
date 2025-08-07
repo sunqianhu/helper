@@ -100,7 +100,10 @@ class Db
                 $pdoStatement->bindValue($param, $value);
             }
         }
-        $pdoStatement->execute();
+        $result = $pdoStatement->execute();
+        if($result === false){
+            throw new Exception($this->getPdoStatementErrorInfo($pdoStatement));
+        }
         return $pdoStatement;
     }
 
@@ -147,5 +150,20 @@ class Db
             throw new Exception('没有找到记录');
         }
         return $field;
+    }
+
+    /**
+     * 获取PDOStatement错误信息
+     * @param PDOStatement $pdoStatement
+     * @return string
+     */
+    public function getPdoStatementErrorInfo(PDOStatement $pdoStatement)
+    {
+        $errorInfos = $pdoStatement->errorInfo();
+        $convertedErrorInfos = [];
+        $convertedErrorInfos[] = 'SQLSTATE 错误码：'.$errorInfos[0];
+        $convertedErrorInfos[] = '具体驱动错误码：'.$errorInfos[1];
+        $convertedErrorInfos[] = '具体驱动错误信息：'.$errorInfos[2];
+        return implode('，', $convertedErrorInfos);
     }
 }

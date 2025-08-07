@@ -6,13 +6,13 @@ class ErrorHandler
 {
     /**
      * 处理
-     * @param $errno
-     * @param $errstr
-     * @param $errfile
-     * @param $errline
+     * @param $errNo
+     * @param $errStr
+     * @param $errFile
+     * @param $errLine
      * @return void
      */
-    public function handle($errno, $errstr, $errfile, $errline){
+    public function handle($errNo, $errStr, $errFile, $errLine){
         $errorTypes = [
             E_ERROR             => '致命错误',
             E_WARNING           => '警告',
@@ -30,11 +30,10 @@ class ErrorHandler
             E_DEPRECATED        => '已废弃',
             E_USER_DEPRECATED   => '用户已废弃',
         ];
-        $errorType = $errorTypes[$errno] ?? '未知错误';
-        $baseName = basename($errfile);
-        $message = $errorType.'：'.$errstr.'，在文件'.$baseName.'的第'.$errline.'行';
+        $errorType = $errorTypes[$errNo] ?? '未知错误';
+        $message = $errorType.'：'.$errStr.'，在文件'.$errFile.'的第'.$errLine.'行';
         $jsonResponse = new JsonResponse();
-        echo $jsonResponse->error($message);
+        echo $jsonResponse->getError($message);
         exit;
     }
 }

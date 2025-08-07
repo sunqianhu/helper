@@ -90,7 +90,7 @@ class StringHandler
     }
 
     /**
-     * 分隔排序
+     * 分隔排序（重排序返回）
      * @param $string
      * @param string $sort
      * @param string $delimiter
