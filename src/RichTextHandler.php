@@ -38,15 +38,12 @@ class RichTextHandler
      */
     public function toRichText($plainText)
     {
-        $plainText = trim($plainText);
-        $plainText = htmlspecialchars($plainText, ENT_QUOTES, 'UTF-8');
-
         $paragraphs = preg_split("/\n\s*\n/", $plainText);
 
         $html = '';
-        foreach ($paragraphs as $para) {
-            $para = nl2br($para, true);
-            $html .= "<p>{$para}</p>\n";
+        foreach ($paragraphs as $paragraph) {
+            $paragraph = str_replace("\n", '<br/>', $paragraph);
+            $html .= "<p>{$paragraph}</p>";
         }
 
         return $html;
