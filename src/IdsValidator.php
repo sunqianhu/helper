@@ -4,26 +4,26 @@ namespace Sunqianhu\Helper;
 
 use Exception;
 
-class IdsValidate
+class IdsValidator
 {
     /**
      * 验证
-     * @param $ids
      * @param $fieldName
+     * @param $ids
      * @return true
      * @throws Exception
      */
-    static public function check($ids, $fieldName)
+    static public function check($fieldName, $ids)
     {
         if(!is_array($ids)){
             throw new Exception($fieldName.'格式必须是个数组');
         }
-        foreach ($ids as $id){
+        foreach ($ids as $key=>$id){
             if(!is_numeric($id)){
-                throw new Exception($fieldName.'中的id必须是数字类型');
+                throw new Exception($fieldName.'中的第'.($key+1).'项必须是数字类型');
             }
             if($id < 0){
-                throw new Exception($fieldName.'中的id不能小于0');
+                throw new Exception($fieldName.'中的第'.($key+1).'项不能小于0');
             }
         }
         return true;
