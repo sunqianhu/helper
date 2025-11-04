@@ -23,7 +23,7 @@ class Installer
         //数据库
         $targetDbPath = $configFullPath . '/databases.php';
         if(!file_exists($targetDbPath)){
-            $sourceDbPath = __DIR__ . '/config/databases.php';
+            $sourceDbPath = __DIR__ . '/config/database.php';
             if(!copy($sourceDbPath, $targetDbPath)){
                 throw new Exception("拷贝数据库配置文件失败：{$sourceDbPath} > {$targetDbPath}");
             }
