@@ -13,7 +13,7 @@ class IdsValidator
      * @return true
      * @throws Exception
      */
-    static public function check($fieldName, $ids)
+    public function check($fieldName, $ids)
     {
         if(!is_array($ids)){
             throw new Exception($fieldName.'格式必须是个数组');

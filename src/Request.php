@@ -19,7 +19,7 @@ class Request
         if (empty($keys)) {
             return $data;
         }
-        $arrayHandler = new ArrayHandler();
+        $arrayHandler = new Arr();
         return $arrayHandler->getDesignatedKeysList($data, $keys);
     }
 
@@ -37,7 +37,7 @@ class Request
         if (empty($keys)) {
             return $data;
         }
-        $arrayHandler = new ArrayHandler();
+        $arrayHandler = new Arr();
         return $arrayHandler->getDesignatedKeysList($data, $keys);
     }
 
@@ -55,7 +55,7 @@ class Request
         if (empty($keys)) {
             return $data;
         }
-        $arrayHandler = new ArrayHandler();
+        $arrayHandler = new Arr();
         return $arrayHandler->getDesignatedKeysList($data, $keys);
     }
 }

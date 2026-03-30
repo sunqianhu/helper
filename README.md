@@ -2,7 +2,7 @@
 php助手类包含项目开发过程中各种常用的类。
 
 ## ArrayHandler数组处理器类 
-- convertTree 转换为树数组 
+- toTree 转换为树数组 
 - rsortTwoDimensional 按某字段降序排序二维数组
 
 ## Captcha验证码类 

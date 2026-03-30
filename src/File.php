@@ -13,9 +13,6 @@ class File
      */
     public function getUrl($path)
     {
-        if($path === ''){
-            throw new Exception('路径参数不能为空');
-        }
         return Config::get('file.access_prefix') . $path;
     }
 
@@ -26,9 +23,6 @@ class File
      * @throws Exception
      */
     public function getFullPath($path){
-        if($path === ''){
-            throw new Exception('路径参数不能为空');
-        }
         return Config::get('file.root_path') . $path;
     }
 
@@ -53,29 +47,47 @@ class File
     }
 
     /**
-     * 创建模块目录
+     * 创建模块目录路径
      * @param $module
      * @return string
      * @throws Exception
      */
-    public function makeModuleDir($module = ''){
+    public function makeModuleDirPath($module = ''){
         $rootPath = Config::get('file.root_path'); // 磁盘根目录
         if (empty($rootPath)) {
             throw new Exception('没有配置文件目录');
         }
 
-        $relativeDir = '';
+        $relativePath = '';
         if ($module != '') {
-            $relativeDir = $module . '/';
+            $relativePath = $module . '/';
         }
-        $relativeDir .= date('Y/m/d') . '/'; // 目录
-        $fullDir = $rootPath . $relativeDir;
-        if (!file_exists($fullDir)) {
-            if (!@mkdir($fullDir, 0755, true)) {
+        $relativePath .= date('Y/m/d') . '/'; // 目录
+        $path = $rootPath . $relativePath;
+        if (!file_exists($path)) {
+            if (!@mkdir($path, 0755, true)) {
                 throw new Exception('目录创建失败');
             }
         }
 
-        return $relativeDir;
+        return $path;
+    }
+
+    /**
+     * 创建模块文件路径
+     * @param string $module
+     * @param string $ext
+     * @return string
+     * @throws Exception
+     */
+    public function makeModuleFilePath($module = '', $ext = '')
+    {
+        $dirPath = $this->makeModuleDirPath($module);
+        $fileName = md5(time().'_sun_'.rand(1000, 9999));
+        if($ext !== ''){
+            $fileName = '.'.$ext;
+        }
+        $path = $dirPath . $fileName;
+        return $path;
     }
 }

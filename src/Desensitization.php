@@ -18,7 +18,7 @@ class Desensitization
 
     /**
      * 得到身份证号码加星
-     * @param $phone
+     * @param $idNumber
      * @return string
      */
     function getIdNumberAddStar($idNumber)

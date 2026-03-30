@@ -2,7 +2,7 @@
 
 namespace Sunqianhu\Helper;
 
-class StringHandler
+class Str
 {
     /**
      * 字符串长度
@@ -17,8 +17,8 @@ class StringHandler
             return $length;
         }
 
-        if (function_exists('mb_utf8length')) {
-            $length = mb_utf8length($string, 'utf-8');
+        if (function_exists('mb_strlen')) {
+            $length = mb_strlen($string, 'utf-8');
         } else {
             preg_match_all('/./u', $string, $match);
             $length = count($match[0]);

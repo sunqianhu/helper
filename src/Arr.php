@@ -2,14 +2,14 @@
 
 namespace Sunqianhu\Helper;
 
-class ArrayHandler
+class Arr
 {
     /**
      * 转换为树数组
      * @param array $data 数据
      * @return array
      */
-    function convertTree($data, $id = 'id', $parentId = 'parent_id', $children = 'children')
+    function toTree($data, $id = 'id', $parentId = 'parent_id', $children = 'children')
     {
         $middle = array(); //中间数组
         $tree = array(); //树形结构数组
@@ -36,12 +36,12 @@ class ArrayHandler
     }
 
     /**
-     * 按某字段降序排序二维数组
+     * 通过列倒序排序
      * @param $array
      * @param $field
      * @return bool
      */
-    function twoDimensionalRsort(&$array, $field) {
+    function sortByColumnDesc(&$array, $field) {
         return usort($array, function($item1, $item2) use($field) {
             $value1 = isset($item1[$field]) ? $item1[$field] : null;
             $value2 = isset($item2[$field]) ? $item2[$field] : null;

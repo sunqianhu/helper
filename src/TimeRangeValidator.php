@@ -4,7 +4,7 @@ namespace Sunqianhu\Helper;
 
 use Exception;
 
-class TimeRangeValidate
+class TimeRangeValidator
 {
     /**
      * 验证
@@ -13,7 +13,7 @@ class TimeRangeValidate
      * @return true
      * @throws Exception
      */
-    static public function check($times, $fieldName)
+    public function check($times, $fieldName)
     {
         if(!is_array($times)){
             throw new Exception($fieldName.'格式必须是个数组');

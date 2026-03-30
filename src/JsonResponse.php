@@ -13,7 +13,7 @@ class JsonResponse
     public function getSuccess($message, $data = null)
     {
         $response = [
-            'code' => 1,
+            'code' => 0,
             'message' => $message,
             'data' => $data
         ];
@@ -27,7 +27,7 @@ class JsonResponse
      * @param $code
      * @return false|string
      */
-    public function getError($message, $data = null, $code = 0)
+    public function getError($message, $data = null, $code = 1)
     {
         $response = [
             'code' => $code,

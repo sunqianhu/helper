@@ -140,9 +140,7 @@ class Image
         $decodeContent = base64_decode($base64Content);
 
         $file = new File();
-        $relativeDir = $file->makeModuleDir($module);
-        $fileName = md5(time() .'_sun_'. rand(1000, 9999)) . '.' . $ext;
-        $path = $relativeDir . $fileName; //文件相对路径
+        $path = $file->makeModuleFilePath($module, $ext);
         $fullPath = $file->getFullPath($path); //全文件路径
 
         if (!file_put_contents($fullPath, $decodeContent)) {
