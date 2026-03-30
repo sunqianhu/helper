@@ -81,7 +81,7 @@ class File
         $dirPath = $this->makeModuleDirPath($module);
         $fileName = md5(time().'_sun_'.rand(1000, 9999));
         if($ext !== ''){
-            $fileName = '.'.$ext;
+            $fileName .= '.'.$ext;
         }
         $path = $dirPath . $fileName;
         return $path;
