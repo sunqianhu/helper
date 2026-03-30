@@ -53,19 +53,15 @@ class File
      * @throws Exception
      */
     public function makeModuleDirPath($module = ''){
-        $rootPath = Config::get('file.root_path'); // 磁盘根目录
-        if (empty($rootPath)) {
-            throw new Exception('没有配置文件目录');
-        }
-
-        $relativePath = '';
+        $path = '';
         if ($module != '') {
-            $relativePath = $module . '/';
+            $path = $module . '/';
         }
-        $relativePath .= date('Y/m/d') . '/'; // 目录
-        $path = $rootPath . $relativePath;
-        if (!file_exists($path)) {
-            if (!@mkdir($path, 0755, true)) {
+        $path .= date('Y/m/d') . '/'; // 目录
+
+        $fullPath = $this->getFullPath($path);
+        if (!file_exists($fullPath)) {
+            if (!mkdir($fullPath, 0755, true)) {
                 throw new Exception('目录创建失败');
             }
         }
