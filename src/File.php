@@ -13,7 +13,8 @@ class File
      */
     public function getUrl($path)
     {
-        return Config::get('file.access_prefix') . $path;
+        $config = new Config();
+        return $config->get('file.access_prefix') . $path;
     }
 
     /**
@@ -23,7 +24,8 @@ class File
      * @throws Exception
      */
     public function getFullPath($path){
-        return Config::get('file.root_path') . $path;
+        $config = new Config();
+        return $config->get('file.root_path') . $path;
     }
 
     /**

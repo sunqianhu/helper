@@ -26,7 +26,11 @@ class Db
     public function __construct($config = [])
     {
         if (empty($config)) {
-            $config = Config::get('database');
+            $config = new Config();
+            $config = $config->get('database');
+        }
+        if(empty($config)){
+            throw new Exception('数据库配置不存在');
         }
         $this->id = md5(implode('|', $config));
 
@@ -128,11 +132,7 @@ class Db
      */
     public function fetch($pdoStatement)
     {
-        $row = $pdoStatement->fetch(PDO::FETCH_ASSOC);
-        if ($row === false) {
-            throw new Exception('没有找到记录');
-        }
-        return $row;
+        return $pdoStatement->fetch(PDO::FETCH_ASSOC);
     }
 
     /**
@@ -145,11 +145,34 @@ class Db
      */
     public function fetchColumn($pdoStatement, $columnNumber = 0)
     {
-        $field = $pdoStatement->fetchColumn($columnNumber);
-        if($field === false){
-            throw new Exception('没有找到记录');
-        }
-        return $field;
+        return $pdoStatement->fetchColumn($columnNumber);
+    }
+
+    /**
+     * 开启事务
+     * @throws Exception
+     */
+    public function beginTransaction()
+    {
+        return $this->getPdo()->beginTransaction();
+    }
+
+    /**
+     * 提交事务
+     * @throws Exception
+     */
+    public function commit()
+    {
+        return $this->getPdo()->commit();
+    }
+
+    /**
+     * 回滚事务
+     * @throws Exception
+     */
+    public function rollBack()
+    {
+        return $this->getPdo()->rollBack();
     }
 
     /**

@@ -8,12 +8,12 @@ class TimeRangeValidator
 {
     /**
      * 验证
-     * @param $times
      * @param $fieldName
+     * @param $times
      * @return true
      * @throws Exception
      */
-    public function check($times, $fieldName)
+    public function check($fieldName, $times)
     {
         if(!is_array($times)){
             throw new Exception($fieldName.'格式必须是个数组');

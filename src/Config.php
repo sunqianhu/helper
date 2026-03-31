@@ -10,52 +10,65 @@ class Config
      * 缓存
      * @var array
      */
-    private static $cache = [];
+    private $cache = [];
 
     /**
      * 得到配置
      * @param $name
+     * @param null $default
      * @return array|mixed|null
      * @throws Exception
      */
-    public static function get($name)
+    public function get($name, $default = null)
     {
         $keys = explode('.', $name);
-        $file = $keys[0];
+        $file = array_shift($keys);
 
         //加载配置
-        if (isset(self::$cache[$file])) {
-            $fileConfig = self::$cache[$file];
-        }else{
-            $fileConfig = self::getFileConfig($file);
-            self::$cache[$file] = $fileConfig;
+        $config = $this->getFileCacheConfig($file);
+        if(empty($keys)){
+            return $config;
         }
 
-        $config = $fileConfig;
-        $fields = array_slice($keys, 1);
-        foreach ($fields as $field) {
-            if(!isset($config[$field])){
-                throw new Exception('配置项不存在：' . $field);
+        foreach ($keys as $key) {
+            if(!isset($config[$key])){
+                return $default;
             }
-            $config = $fileConfig[$field];
+            $config = $config[$key];
         }
 
         return $config;
     }
 
     /**
-     * 得到文件配置
+     * 设置文件缓存配置
      * @param $file
-     * @return string
+     * @return void
      * @throws Exception
      */
-    private static function getFileConfig($file)
+    public function setFileCacheConfig($file)
     {
         $basePath = dirname(__DIR__, 4) . '/config/';
         $path = $basePath . $file . '.php';
         if (!file_exists($path)) {
             throw new Exception('配置文件不存在：' . $path);
         }
-        return require $path;
+        $this->cache[$file] = require $path;
+    }
+
+    /**
+     * 得到文件缓存
+     * @param $file
+     * @return mixed
+     * @throws Exception
+     */
+    public function getFileCacheConfig($file)
+    {
+        if(isset($this->cache[$file])){
+            return $this->cache[$file];
+        }
+        $this->setFileCacheConfig($file);
+
+        return $this->cache[$file];
     }
 }

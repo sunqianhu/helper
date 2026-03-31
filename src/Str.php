@@ -11,7 +11,6 @@ class Str
      */
     function length($string)
     {
-        $match = array();
         $length = 0;
         if ($string === '') {
             return $length;
@@ -37,8 +36,6 @@ class Str
     function sub($string, $start, $length)
     {
         $new = '';
-        $match = array();
-
         if ($string === '') {
             return $new;
         }

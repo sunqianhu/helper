@@ -11,8 +11,8 @@ class Arr
      */
     function toTree($data, $id = 'id', $parentId = 'parent_id', $children = 'children')
     {
-        $middle = array(); //中间数组
-        $tree = array(); //树形结构数组
+        $middle = []; //中间数组
+        $tree = []; //树形结构数组
 
         //重构索引
         foreach ($data as $item) {
@@ -28,7 +28,7 @@ class Arr
                 $data[$item[$parentId]][$children][] = &$data[$item[$id]]; //传地址，保证子项也跟到动。
             } else {
                 //不存在上级
-                $tree[] = &$data[$item[$id]]; //传地址，保证后续更新datas，tree也被更新。
+                $tree[] = &$data[$item[$id]]; //传地址，保证后续更新data，tree也被更新。
             }
         }
 
@@ -66,7 +66,7 @@ class Arr
     }
 
     /**
-     * 得到指定keys的集合
+     * 得到指定keys的列表
      * @param $data
      * @param $keys
      * @return array
@@ -74,17 +74,9 @@ class Arr
     function getDesignatedKeysList($data, $keys)
     {
         $list = [];
-        foreach ($keys as $key => $value) {
-            if (!is_numeric($key)) {
-                if (isset($data[$key])) {
-                    $list[$key] = $data[$key];
-                } else {
-                    $list[$key] = $value;
-                }
-            } else {
-                if (isset($data[$value])) {
-                    $list[$value] = $data[$value];
-                }
+        foreach ($keys as $key) {
+            if (isset($data[$key])) {
+                $list[$key] = $data[$key];
             }
         }
         return $list;

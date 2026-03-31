@@ -10,7 +10,7 @@ class Time
      * @param $time
      * @return string
      */
-    function getFragmentName($time)
+    public function getFragmentName($time)
     {
         if(empty($time)){
             return '';

@@ -9,13 +9,13 @@ class NumberValidator
     /**
      * 验证
      * @param $fieldName
-     * @param $id
+     * @param $number
      * @return true
      * @throws Exception
      */
-    static public function check($fieldName, $id)
+    static public function check($fieldName, $number)
     {
-        if(!is_numeric($id)){
+        if(!is_numeric($number)){
             throw new Exception($fieldName.'必须是个数字');
         }
         return true;

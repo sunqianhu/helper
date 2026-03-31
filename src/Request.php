@@ -19,8 +19,8 @@ class Request
         if (empty($keys)) {
             return $data;
         }
-        $arrayHandler = new Arr();
-        return $arrayHandler->getDesignatedKeysList($data, $keys);
+        $arr = new Arr();
+        return $arr->getDesignatedKeysList($data, $keys);
     }
 
     /**
@@ -37,8 +37,8 @@ class Request
         if (empty($keys)) {
             return $data;
         }
-        $arrayHandler = new Arr();
-        return $arrayHandler->getDesignatedKeysList($data, $keys);
+        $arr = new Arr();
+        return $arr->getDesignatedKeysList($data, $keys);
     }
 
     /**
@@ -55,7 +55,7 @@ class Request
         if (empty($keys)) {
             return $data;
         }
-        $arrayHandler = new Arr();
-        return $arrayHandler->getDesignatedKeysList($data, $keys);
+        $arr = new Arr();
+        return $arr->getDesignatedKeysList($data, $keys);
     }
 }

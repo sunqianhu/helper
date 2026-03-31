@@ -137,6 +137,9 @@ class Image
         }
         $ext = $extMap[$mimeType];
         $base64Content = $contents[1] ?? '';
+        if(empty($base64Content)){
+            throw new Exception('图片内容不能为空');
+        }
         $decodeContent = base64_decode($base64Content);
 
         $file = new File();

@@ -29,7 +29,7 @@ class Desensitization
 
     /**
      * 得到姓名加星
-     * @param $phone
+     * @param $name
      * @return string
      */
     function getNameAddStar($name)

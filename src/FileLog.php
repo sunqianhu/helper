@@ -16,7 +16,8 @@ class FileLog
     public function __construct($config = [])
     {
         if (empty($config)) {
-            $config = Config::get('file_log');
+            $config = new Config();
+            $config = $config->get('file_log');
         }
         if(empty($config['full_path'])){
             throw new Exception('请配置文件日志路径');
@@ -29,7 +30,7 @@ class FileLog
      * 消息日志
      */
     public function info($content){
-        $content = date('Y-m-d H:i:s').' info '.$content.PHP_EOL;
+        $content = '[info] '.date('Y-m-d H:i:s').' '.$content.PHP_EOL;
         file_put_contents($this->fullPath, $content, FILE_APPEND);
     }
 
@@ -40,7 +41,7 @@ class FileLog
      */
     public function warning($content)
     {
-        $content = date('Y-m-d H:i:s').' warning '.$content.PHP_EOL;
+        $content = '[warning] '.date('Y-m-d H:i:s').' '.$content.PHP_EOL;
         file_put_contents($this->fullPath, $content, FILE_APPEND);
     }
 
@@ -50,7 +51,7 @@ class FileLog
      * @return void
      */
     public function error($content){
-        $content = date('Y-m-d H:i:s').' error '.$content.PHP_EOL;
+        $content = '[error] '.date('Y-m-d H:i:s').' '.$content.PHP_EOL;
         file_put_contents($this->fullPath, $content, FILE_APPEND);
     }
 
@@ -60,7 +61,7 @@ class FileLog
      * @return void
      */
     public function success($content){
-        $content = date('Y-m-d H:i:s').' success '.$content.PHP_EOL;
+        $content = '[success] '.date('Y-m-d H:i:s').' '.$content.PHP_EOL;
         file_put_contents($this->fullPath, $content, FILE_APPEND);
     }
 }
