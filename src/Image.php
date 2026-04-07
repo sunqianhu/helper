@@ -50,6 +50,10 @@ class Image
 
         //缩略图的宽度和高度
         if ($sourceWidth <= $maxSize && $sourceHeight <= $maxSize) {
+            if($sourceType === $thumbnailType){
+                copy($sourcePath, $thumbnailPath);
+                return;
+            }
             $newWidth = $sourceWidth;
             $newHeight = $sourceHeight;
         }else{
