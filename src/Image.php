@@ -48,12 +48,16 @@ class Image
                 $thumbnailType = $sourceType;
         }
 
+        //不缩略
+        if ($sourceWidth <= $maxSize && $sourceHeight <= $maxSize && $sourceType === $thumbnailType) {
+            if (!copy($sourcePath, $thumbnailPath)) {
+                throw new Exception('文件复制失败');
+            }
+            return;
+        }
+
         //缩略图的宽度和高度
         if ($sourceWidth <= $maxSize && $sourceHeight <= $maxSize) {
-            if($sourceType === $thumbnailType){
-                copy($sourcePath, $thumbnailPath);
-                return;
-            }
             $newWidth = $sourceWidth;
             $newHeight = $sourceHeight;
         }else{
@@ -101,15 +105,6 @@ class Image
             $transparent = imagecolorallocatealpha($thumbnailImage, 255, 255, 255, 127);
             //填充透明色
             imagefill($thumbnailImage, 0, 0, $transparent);
-        } elseif ($thumbnailType === IMAGETYPE_GIF) {
-            // GIF：GIF 不支持 Alpha 通道，也不能先填充透明色。
-            // 它的逻辑是：画布默认是黑色的 -> 我们把黑色指定为“透明色”。
-            // 关闭混合模式，防止复制时颜色混合
-            imagealphablending($thumbnailImage, false);
-            // 获取画布默认的黑色索引
-            $black = imagecolorallocate($thumbnailImage, 0, 0, 0);
-            // 将黑色设置为透明色
-            imagecolortransparent($thumbnailImage, $black);
         }else{
             $white = imagecolorallocate($thumbnailImage, 255, 255, 255);
             imagefilledrectangle($thumbnailImage, 0, 0, $newWidth, $newHeight, $white);
