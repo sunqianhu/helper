@@ -19,17 +19,52 @@ class Image
         //获取原始图片的信息
         list($sourceWidth, $sourceHeight, $sourceType) = getimagesize($sourcePath);
         if (!$sourceWidth || !$sourceHeight) {
-            throw new Exception('获取图片尺寸失败');
+            throw new Exception('原图片宽度高度获取失败');
         }
-        if ($sourceWidth <= $maxSize && $sourceHeight <= $maxSize) {
-            return;
+        if (
+            $sourceType !== IMAGETYPE_JPEG &&
+            $sourceType !== IMAGETYPE_PNG &&
+            $sourceType !== IMAGETYPE_GIF
+        ) {
+            throw new Exception('原图片类型只支持JPG、PNG、GIF格式');
         }
 
-        if ($sourceType !== IMAGETYPE_JPEG && $sourceType !== IMAGETYPE_PNG && $sourceType !== IMAGETYPE_GIF) {
-            throw new Exception('此图片类型不支持缩略');
+        $thumbnailExt = pathinfo($thumbnailPath, PATHINFO_EXTENSION);
+        if(!empty($thumbnailExt)){
+            $thumbnailExt = strtolower($thumbnailExt);
+        }
+        switch ($thumbnailExt) {
+            case 'jpg':
+            case 'jpeg':
+                $thumbnailType = IMAGETYPE_JPEG;
+                break;
+            case 'png':
+                $thumbnailType = IMAGETYPE_PNG;
+                break;
+            case 'gif':
+                $thumbnailType = IMAGETYPE_GIF;
+                break;
+            default:
+                $thumbnailType = $sourceType;
+        }
+
+        //缩略图的宽度和高度
+        if ($sourceWidth <= $maxSize && $sourceHeight <= $maxSize) {
+            $newWidth = $sourceWidth;
+            $newHeight = $sourceHeight;
+        }else{
+            //计算缩放比例
+            if ($sourceWidth > $sourceHeight) {
+                $ratio = $maxSize / $sourceWidth;
+            } else {
+                $ratio = $maxSize / $sourceHeight;
+            }
+            $newWidth = intval($sourceWidth * $ratio);
+            $newHeight = intval($sourceHeight * $ratio);
         }
 
         //创建源图片的资源
+        $sourceImage = null;
         switch ($sourceType) {
             case IMAGETYPE_JPEG:
                 $sourceImage = imagecreatefromjpeg($sourcePath);
@@ -40,32 +75,40 @@ class Image
             case IMAGETYPE_GIF:
                 $sourceImage = imagecreatefromgif($sourcePath);
                 break;
-            default:
-                throw new Exception('此图片类型不支持缩略');
         }
         if (!$sourceImage) {
             throw new Exception('原图像画布创建失败');
         }
 
-        //计算缩放比例
-        if ($sourceWidth > $sourceHeight) {
-            $ratio = $maxSize / $sourceWidth;
-        } else {
-            $ratio = $maxSize / $sourceHeight;
-        }
-
-        $newWidth = intval($sourceWidth * $ratio);
-        $newHeight = intval($sourceHeight * $ratio);
-
         //创建缩略图的资源
         $thumbnailImage = imagecreatetruecolor($newWidth, $newHeight);
 
-        //对于PNG文件，设置透明度处理
-        if ($sourceType == IMAGETYPE_PNG) {
+        //处理透明背景
+        if ($thumbnailType === IMAGETYPE_PNG) {
+            /*
+             * 关闭颜色混合模式
+             * 开启（默认）：你在墙上刷漆，新油漆会和旧油漆混在一起。
+             * 关闭（false）：我在墙上刷漆，等漆干了再刷新漆，新漆是什么就是什么，不喝底层颜色混合成新色，是透明就直接透明。
+             */
             imagealphablending($thumbnailImage, false);
+            //默认情况下，PHP 为了节省内存，保存 PNG 时会把透明信息扔掉。这句代码强制要求：“最后保存文件时，必须把透明信息（Alpha通道）保留下来”。
             imagesavealpha($thumbnailImage, true);
+            //为图像分配颜色，分配一个透明色。
             $transparent = imagecolorallocatealpha($thumbnailImage, 255, 255, 255, 127);
+            //填充透明色
             imagefill($thumbnailImage, 0, 0, $transparent);
+        } elseif ($thumbnailType === IMAGETYPE_GIF) {
+            // GIF：GIF 不支持 Alpha 通道，也不能先填充透明色。
+            // 它的逻辑是：画布默认是黑色的 -> 我们把黑色指定为“透明色”。
+            // 关闭混合模式，防止复制时颜色混合
+            imagealphablending($thumbnailImage, false);
+            // 获取画布默认的黑色索引
+            $black = imagecolorallocate($thumbnailImage, 0, 0, 0);
+            // 将黑色设置为透明色
+            imagecolortransparent($thumbnailImage, $black);
+        }else{
+            $white = imagecolorallocate($thumbnailImage, 255, 255, 255);
+            imagefilledrectangle($thumbnailImage, 0, 0, $newWidth, $newHeight, $white);
         }
 
         //将原始图片缩放到缩略图尺寸
@@ -83,7 +126,7 @@ class Image
         );
 
         //保存缩略图
-        switch ($sourceType) {
+        switch ($thumbnailType) {
             case IMAGETYPE_JPEG:
                 imagejpeg($thumbnailImage, $thumbnailPath, $quality);
                 break;
@@ -93,8 +136,6 @@ class Image
             case IMAGETYPE_GIF:
                 imagegif($thumbnailImage, $thumbnailPath);
                 break;
-            default:
-                throw new Exception('此图片类型不支持缩略');
         }
 
         //释放资源
