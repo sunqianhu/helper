@@ -36,6 +36,38 @@ class Arr
     }
 
     /**
+     * 通过列升序排序
+     * @param array $array
+     * @param string $field
+     * @return bool
+     */
+    function sortByColumnAsc(&$array, $field) {
+        return usort($array, function($item1, $item2) use($field) {
+            $value1 = isset($item1[$field]) ? $item1[$field] : null;
+            $value2 = isset($item2[$field]) ? $item2[$field] : null;
+
+            // 处理 null 值
+            if ($value1 === null && $value2 === null) {
+                return 0;
+            } else if ($value1 !== null && $value2 === null) {
+                return 1;
+            } else if ($value1 === null && $value2 !== null) {
+                return -1; // null 排在非 null 之前
+            }
+
+            // 数字比较
+            if (is_numeric($value1) && is_numeric($value2)) {
+                if ($value1 == $value2) {
+                    return 0;
+                }
+                return $value1 < $value2 ? -1 : 1;
+            }
+
+            return strcmp((string)$value1, (string)$value2);
+        });
+    }
+
+    /**
      * 通过列倒序排序
      * @param $array
      * @param $field
