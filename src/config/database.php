@@ -6,5 +6,6 @@ return [
     'dbname'=>'dbname',
     'username'=>'username',
     'password'=>'password',
-    'charset'=>'utf8mb4'
+    'charset'=>'utf8mb4',
+    'break_reconnect'=>false
 ];

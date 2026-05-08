@@ -8,15 +8,9 @@ use PDOStatement;
 
 class Db
 {
-    static public $pdos = [];
-    public $id = '';
-    public $type = '';
-    public $host = '';
-    public $port = '';
-    public $dbname = '';
-    public $username = '';
-    public $password = '';
-    public $charset = '';
+    static public $pdos = []; //连接池，本进程有效
+    public $connectKey = '';
+    public $config = [];
 
     /**
      * 构造函数
@@ -32,18 +26,16 @@ class Db
         if(empty($config)){
             throw new Exception('数据库配置不存在');
         }
-        $this->id = md5(implode('|', $config));
 
-        $this->type = $config['type'];
-        $this->host = $config['host'];
-        $this->port = $config['port'];
-        $this->dbname = $config['dbname'];
-        $this->username = $config['username'];
-        $this->password = $config['password'];
-        $this->charset = $config['charset'];
+        $this->connectKey = md5(implode('|', $config));
+        $this->config = $config;
 
+        if (isset(self::$pdos[$this->connectKey])) {
+            return;
+        }
         $this->connect();
     }
+
 
     /**
      * 连接
@@ -51,17 +43,17 @@ class Db
      */
     public function connect()
     {
-        $dsn = $this->type .
-            ':host=' . $this->host .
-            ';port=' . $this->port .
-            ';dbname=' . $this->dbname .
-            ';charset=' . $this->charset;
-        $pdo = new PDO($dsn, $this->username, $this->password, [
+        $dsn = $this->config['type'] .
+            ':host=' . $this->config['host'] .
+            ';port=' . $this->config['port'] .
+            ';dbname=' . $this->config['dbname'] .
+            ';charset=' . $this->config['charset'];
+        $pdo = new PDO($dsn, $this->config['username'], $this->config['password'], [
             PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
             PDO::ATTR_EMULATE_PREPARES => false, //关闭模拟预处理
             PDO::ATTR_STRINGIFY_FETCHES => false //禁止将数值转换为字符串
         ]);
-        self::$pdos[$this->id] = $pdo;
+        self::$pdos[$this->connectKey] = $pdo;
     }
 
     /**
@@ -71,10 +63,17 @@ class Db
      */
     public function getPdo()
     {
-        if (!isset(self::$pdos[$this->id])) {
-            throw new Exception('pdo对象不存在');
+        //断线重连
+        if (!empty($this->config['break_reconnect'])) {
+            try {
+                $pdo = self::$pdos[$this->connectKey];
+                $pdo->query('SELECT 1');
+            } catch (Exception $exception) {
+                $this->connect();
+            }
         }
-        return self::$pdos[$this->id];
+
+        return self::$pdos[$this->connectKey];
     }
 
     /**
