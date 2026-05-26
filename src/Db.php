@@ -131,7 +131,11 @@ class Db
      */
     public function fetch($pdoStatement)
     {
-        return $pdoStatement->fetch(PDO::FETCH_ASSOC);
+        $row = $pdoStatement->fetch(PDO::FETCH_ASSOC);
+        if ($row === false) {
+            return [];
+        }
+        return $row;
     }
 
     /**
