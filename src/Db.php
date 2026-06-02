@@ -318,7 +318,7 @@ class Db
 
     /**
      * 得到最后插入ID
-     * @return int|null
+     * @return int
      * @throws Exception
      */
     public function getLastInsertId($fieldName = null)
@@ -326,7 +326,7 @@ class Db
         $pdo = $this->getPdo();
         $id = $pdo->lastInsertId($fieldName);
         if($id === '' || $id === false){
-            return null;
+            throw new Exception('没有得到最后新增ID');
         }
         return (int)$id;
     }
