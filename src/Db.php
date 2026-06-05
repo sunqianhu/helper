@@ -244,41 +244,45 @@ class Db
     /**
      * 查询一行
      * @param $sql
-     * @param $params
+     * @param array $params
+     * @param int $mode
      * @return mixed
      * @throws Exception
      */
-    public function queryRow($sql, $params = [])
+    public function queryRow($sql, $params = [], $mode = PDO::FETCH_ASSOC)
     {
         $pdoStatement = $this->execute($sql, $params);
-        return $this->fetch($pdoStatement);
+        return $this->fetch($pdoStatement, $mode);
     }
 
     /**
      * 查询全部
      * @param $sql
-     * @param $params
+     * @param array $params
+     * @param int $mode
      * @return array
      * @throws Exception
      */
-    public function queryAll($sql, $params = [])
+    public function queryAll($sql, $params = [], $mode = PDO::FETCH_ASSOC)
     {
         $pdoStatement = $this->execute($sql, $params);
-        return $this->fetchAll($pdoStatement);
+        return $this->fetchAll($pdoStatement, $mode);
     }
 
     /**
      * 查询一列
      * @param $sql
-     * @param $params
+     * @param array $params
+     * @param int $columnNumber
      * @return mixed
      * @throws Exception
      */
-    public function queryColumn($sql, $params = [])
+    public function queryColumn($sql, $params = [], $columnNumber = 0)
     {
         $pdoStatement = $this->execute($sql, $params);
-        return $this->fetchColumn($pdoStatement);
+        return $this->fetchColumn($pdoStatement, $columnNumber);
     }
+    
     /**
      * 开启事务
      * @throws Exception
