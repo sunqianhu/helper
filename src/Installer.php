@@ -27,7 +27,7 @@ class Installer
         }
 
         // 3. 复制三个配置文件，已有的文件直接跳过
-        $files = ['database.php', 'file.php', 'file_log.php'];
+        $files = ['db.php', 'file.php', 'file_log.php'];
         foreach ($files as $file) {
             $targetPath = rtrim($configFullRootPath, '/\\') . '/' . $file;
             if (is_file($targetPath)) {

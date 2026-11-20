@@ -380,7 +380,7 @@ $segments = $range->getSegments($start, $end); // 10时、11时、12时三个片
 ```php
 use Sunqianhu\Helper\Db;
 
-$db = new Db(); // 读取 config/database.php，并立即建立或复用连接
+$db = new Db(); // 读取 config/db.php，并立即建立或复用连接
 ```
 
 也可以直接传入完整配置：
