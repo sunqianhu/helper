@@ -122,6 +122,7 @@ class Db
 
     /**
      * 执行sql语句
+     * 事务内执行失败时不自动重连或重试
      * @access public
      * @param string $sql sql
      * @param array $params 数据
@@ -131,6 +132,8 @@ class Db
     public function execute($sql, $params = [])
     {
         $pdo = $this->getPdo();
+        // 断线后驱动可能清除事务标记，必须保留执行前的状态。
+        $inTransaction = $pdo->inTransaction();
         $pdoStatement = $pdo->prepare($sql);
         $this->bindParams($pdoStatement, $params);
 
@@ -141,6 +144,10 @@ class Db
             }
             return $pdoStatement;
         } catch (Exception $exception) {
+            if ($inTransaction) {
+                throw $exception;
+            }
+
             $errorInfo = $pdoStatement->errorInfo();
             $isGone = $this->checkConnectionGone($errorInfo);
 
