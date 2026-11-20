@@ -16,7 +16,7 @@ class Config
         if (class_exists(InstalledVersions::class)) {
             $root = InstalledVersions::getRootPackage();
             if (!empty($root['install_path'])) {
-                return $root['install_path'] . '/config/';
+                return rtrim($root['install_path'], '/') . '/config/';
             }
         }
 

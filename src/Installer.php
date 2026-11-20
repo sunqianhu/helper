@@ -40,8 +40,9 @@ class Installer
             if (!@copy($sourcePath, $targetPath)) {
                 throw new Exception("拷贝配置文件失败：{$sourcePath} > {$targetPath}");
             }
+            echo "配置文件安装成功：{$sourcePath} > {$targetPath}" . PHP_EOL;
         }
 
-        echo "配置文件安装成功：{$configFullRootPath}" . PHP_EOL;
+        echo '配置文件安装完成' . PHP_EOL;
     }
 }
