@@ -45,7 +45,7 @@ class Curl
      */
     public function setOptions($options)
     {
-        $this->options = array_merge($this->options, $options);
+        $this->options = array_replace($this->options, $options);
         return $this;
     }
 
