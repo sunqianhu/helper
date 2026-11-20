@@ -2,6 +2,8 @@
 
 namespace Sunqianhu\Helper;
 
+use InvalidArgumentException;
+
 class Desensitization
 {
 
@@ -23,8 +25,11 @@ class Desensitization
      */
     function getIdNumberAddStar($idNumber)
     {
-        $pattern = '/(\d{12})\d{6}/isuU';
-        return preg_replace($pattern, '$1******', $idNumber);
+        if (!preg_match('/\A[0-9]{17}[0-9Xx]\z/', $idNumber)) {
+            return $idNumber;
+        }
+
+        return substr($idNumber, 0, 12) . '******';
     }
 
     /**
