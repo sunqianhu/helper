@@ -566,9 +566,12 @@ $file = new File();
 $path = $file->makeModuleFilePath('exports', 'txt');
 $fullPath = $file->getFullPath($path);
 $url = $file->getUrl($path);
+
+// 安全保存：独占创建文件，重名时重新生成路径
+$savedPath = $file->saveModuleContentToFile('exports', '文件内容', 'txt');
 ```
 
-生成的相对路径结构为 `模块名/年/月/日/32位随机名.扩展名`，例如 `exports/YYYY/MM/DD/{random}.txt`。文件名通过 `bin2hex(random_bytes(16))` 生成。
+生成的相对路径结构为 `模块名/年/月/日/32位随机名.扩展名`，例如 `exports/YYYY/MM/DD/{random}.txt`。文件名通过 `md5(time() . bin2hex(random_bytes(16)))` 生成；是否覆盖已有文件由实际写入方式决定。
 
 | 方法 | 说明 |
 | --- | --- |
@@ -576,9 +579,10 @@ $url = $file->getUrl($path);
 | `getFullPath($path)` | 存储根目录加文件相对路径 |
 | `makeModuleDirPath($module = '')` | 创建模块下的日期目录，返回带尾部 `/` 的相对目录 |
 | `makeModuleFilePath($module = '', $ext = '')` | 创建日期目录并生成相对文件路径，不创建文件本身 |
+| `saveModuleContentToFile($module, $content, $ext = '')` | 独占创建并写入文件，返回相对路径；重名最多尝试 10 次，写入失败时清理本次创建的文件并抛出异常 |
 | `unlinkFile($path)` | 删除相对路径对应的文件；路径为空、目标不存在或不是文件时抛出异常 |
 
-随机文件名的碰撞概率很低，文件创建仍由调用方负责。需要拒绝覆盖已有文件时，可以使用 `fopen($fullPath, 'xb')` 独占创建，冲突后重新生成路径。
+需要避免覆盖已有文件时，使用 `saveModuleContentToFile()`。它通过 `fopen($fullPath, 'xb')` 独占创建，重名时重新生成路径，支持二进制和空内容。单独调用 `makeModuleFilePath()` 只生成路径，不会占用文件名。
 
 路径、模块名和扩展名应由业务控制；该类直接拼接路径，不负责目录穿越校验。
 
@@ -612,7 +616,7 @@ $path = $image->saveBase64ContentToFile('avatars', $dataUri);
 
 该方法依赖 `config/file.php`，返回保存后的文件相对路径。支持的声明类型为 `image/jpg`、`image/jpeg`、`image/png`、`image/gif`。
 
-当前实现按 Data URI 中的类型声明选择扩展名，再解码保存；真实图片内容与上传大小限制需要由业务校验。保存操作使用 `file_put_contents()`，没有独占创建语义。
+当前实现按 Data URI 中的类型声明选择扩展名，再解码保存；真实图片内容与上传大小限制需要由业务校验。保存操作调用 `File::saveModuleContentToFile()`，通过独占创建避免覆盖已有文件，重名时自动重试。
 
 ### Captcha
 

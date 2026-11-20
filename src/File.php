@@ -63,7 +63,7 @@ class File
 
         $fullPath = $this->getFullPath($path);
         if (!is_dir($fullPath)) {
-            if (!mkdir($fullPath, 0755, true)) {
+            if (!@mkdir($fullPath, 0755, true) && !is_dir($fullPath)) {
                 throw new Exception('目录创建失败');
             }
         }
@@ -81,11 +81,17 @@ class File
     public function makeModuleFilePath($module = '', $ext = '')
     {
         $dirPath = $this->makeModuleDirPath($module);
-        $fileName = bin2hex(random_bytes(16));
+        $fileName = md5(time().bin2hex(random_bytes(16)));
         if($ext !== ''){
             $fileName .= '.'.$ext;
         }
         $path = $dirPath . $fileName;
+
+        $fullPath = $this->getFullPath($path);
+        if(file_exists($fullPath)){
+           $path = $this->makeModuleFilePath($module, $ext);
+        }
+
         return $path;
     }
 }
