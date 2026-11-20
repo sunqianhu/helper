@@ -107,7 +107,7 @@ class Arr
     {
         $list = [];
         foreach ($keys as $key) {
-            if (isset($data[$key])) {
+            if (array_key_exists($key, $data)) {
                 $list[$key] = $data[$key];
             }
         }
@@ -124,9 +124,6 @@ class Arr
     function getColumnsString($array, $column, $separator = ',')
     {
         if (!is_array($array)) {
-            return '';
-        }
-        if (!isset($array[0][$column])) {
             return '';
         }
         return implode($separator, array_column($array, $column));

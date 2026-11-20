@@ -62,7 +62,7 @@ class File
         $path .= date('Y/m/d') . '/'; // 目录
 
         $fullPath = $this->getFullPath($path);
-        if (!file_exists($fullPath)) {
+        if (!is_dir($fullPath)) {
             if (!mkdir($fullPath, 0755, true)) {
                 throw new Exception('目录创建失败');
             }
@@ -81,7 +81,7 @@ class File
     public function makeModuleFilePath($module = '', $ext = '')
     {
         $dirPath = $this->makeModuleDirPath($module);
-        $fileName = md5(time().'_sun_'.rand(1000, 9999));
+        $fileName = bin2hex(random_bytes(16));
         if($ext !== ''){
             $fileName .= '.'.$ext;
         }

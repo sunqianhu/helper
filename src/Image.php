@@ -124,22 +124,25 @@ class Image
             $sourceHeight
         );
 
-        //保存缩略图
-        switch ($thumbnailType) {
-            case IMAGETYPE_JPEG:
-                imagejpeg($thumbnailImage, $thumbnailPath, $quality);
-                break;
-            case IMAGETYPE_PNG:
-                imagepng($thumbnailImage, $thumbnailPath);
-                break;
-            case IMAGETYPE_GIF:
-                imagegif($thumbnailImage, $thumbnailPath);
-                break;
+        try {
+            switch ($thumbnailType) {
+                case IMAGETYPE_JPEG:
+                    $saved = imagejpeg($thumbnailImage, $thumbnailPath, $quality);
+                    break;
+                case IMAGETYPE_PNG:
+                    $saved = imagepng($thumbnailImage, $thumbnailPath);
+                    break;
+                case IMAGETYPE_GIF:
+                    $saved = imagegif($thumbnailImage, $thumbnailPath);
+                    break;
+            }
+            if (!$saved) {
+                throw new Exception('缩略图保存失败');
+            }
+        } finally {
+            imagedestroy($thumbnailImage);
+            imagedestroy($sourceImage);
         }
-
-        //释放资源
-        imagedestroy($thumbnailImage);
-        imagedestroy($sourceImage);
     }
 
     /**
@@ -181,6 +184,9 @@ class Image
             throw new Exception('图片内容不能为空');
         }
         $decodeContent = base64_decode($base64Content);
+        if ($decodeContent === false) {
+            throw new Exception('图片内容base64 decode解码失败');
+        }
 
         $file = new File();
         $path = $file->makeModuleFilePath($module, $ext);

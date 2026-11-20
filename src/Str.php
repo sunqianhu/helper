@@ -19,7 +19,7 @@ class Str
         if (function_exists('mb_strlen')) {
             $length = mb_strlen($string, 'utf-8');
         } else {
-            preg_match_all('/./u', $string, $match);
+            preg_match_all('/./us', $string, $match);
             $length = count($match[0]);
         }
 
@@ -43,7 +43,7 @@ class Str
         if (function_exists('mb_substr')) {
             $new = mb_substr($string, $start, $length, 'utf-8');
         } else {
-            preg_match_all('/./u', $string, $match);
+            preg_match_all('/./us', $string, $match);
             $new = join('', array_slice($match[0], $start, $length));
         }
 
@@ -80,9 +80,9 @@ class Str
             return $word;
         }
 
-        $word = str_replace('_', ' ', $word);
-        $word = ucwords($word, $delimiters);
-        $word = str_replace($delimiters, '', $word);
+        $separators = array_merge(['_', ' '], str_split($delimiters));
+        $word = str_replace($separators, ' ', $word);
+        $word = str_replace(' ', '', ucwords($word));
         return lcfirst($word);
     }
 

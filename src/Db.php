@@ -48,7 +48,7 @@ class Db
                 $dsn = "mysql:host={$this->config['host']};port={$this->config['port']};dbname={$this->config['dbname']};charset={$this->config['charset']}";
                 break;
             case 'pgsql':
-                $dsn = "pgsql:host={$this->config['host']};port={$this->config['port']};dbname={$this->config['dbname']};charset={$this->config['charset']}";
+                $dsn = "pgsql:host={$this->config['host']};port={$this->config['port']};dbname={$this->config['dbname']};client_encoding={$this->config['charset']}";
                 break;
             case 'sqlsrv':
                 $dsn = "sqlsrv:Server={$this->config['host']},{$this->config['port']};Database={$this->config['dbname']}";
@@ -132,12 +132,11 @@ class Db
     public function execute($sql, $params = [])
     {
         $pdo = $this->getPdo();
-        // 断线后驱动可能清除事务标记，必须保留执行前的状态。
         $inTransaction = $pdo->inTransaction();
-        $pdoStatement = $pdo->prepare($sql);
-        $this->bindParams($pdoStatement, $params);
 
         try {
+            $pdoStatement = $pdo->prepare($sql);
+            $this->bindParams($pdoStatement, $params);
             $result = $pdoStatement->execute();
             if ($result === false) {
                 throw new Exception($this->getPdoStatementErrorInfo($pdoStatement));
@@ -178,8 +177,11 @@ class Db
     {
         foreach ($params as $key => $value) {
             if (is_array($value)) {
-                $paramType = $value[1];
-                if(!$paramType){
+                $paramType = null;
+                if(isset($value[1])){
+                    $paramType = $value[1];
+                }
+                if($paramType == null){
                     $paramType = $this->getParamType($value[0]);
                 }
                 $pdoStatement->bindValue($key, $value[0], $paramType);

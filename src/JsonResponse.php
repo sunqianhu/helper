@@ -2,13 +2,16 @@
 
 namespace Sunqianhu\Helper;
 
+use JsonException;
+
 class JsonResponse
 {
     /**
      * 得到成功
      * @param $message
      * @param $data
-     * @return false|string
+     * @return string
+     * @throws JsonException JSON编码失败时抛出
      */
     public function getSuccess($message, $data = null)
     {
@@ -17,7 +20,7 @@ class JsonResponse
             'message' => $message,
             'data' => $data
         ];
-        return json_encode($response);
+        return json_encode($response, JSON_THROW_ON_ERROR);
     }
 
     /**
@@ -25,7 +28,8 @@ class JsonResponse
      * @param $message
      * @param $data
      * @param $code
-     * @return false|string
+     * @return string
+     * @throws JsonException JSON编码失败时抛出
      */
     public function getError($message, $data = null, $code = 1)
     {
@@ -34,6 +38,6 @@ class JsonResponse
             'message' => $message,
             'data' => $data
         ];
-        return json_encode($response);
+        return json_encode($response, JSON_THROW_ON_ERROR);
     }
 }

@@ -17,29 +17,13 @@ class NumberHandler
             return $number;
         }
 
-        //计算数字位数
-        $digit = floor(log10($number));
-
-        //根据位数确定单位
-        switch ($digit) {
-            case 4:
-            case 5:
-            case 6:
-            case 7:
-                $suffix = '万';
-                break;
-            case 8:
-            case 9:
-            case 10:
-            case 11:
-                $suffix = '亿';
-                break;
-            default:
-                $suffix = '';
+        if ($number < 100000000) {
+            return number_format($number / 10000, 1) . '万';
         }
-
-        //格式化数字并返回
-        return number_format($number / pow(10, $digit - ($digit % 4)), 1) . $suffix;
+        if ($number < 1000000000000) {
+            return number_format($number / 100000000, 1) . '亿';
+        }
+        return number_format($number / 1000000000000, 1) . '万亿';
     }
 
     /**

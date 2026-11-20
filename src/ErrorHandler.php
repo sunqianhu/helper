@@ -25,7 +25,7 @@ class ErrorHandler
     public function handle($errNo, $errStr, $errFile, $errLine)
     {
         //是否关闭错误报告
-        if (error_reporting() === 0) {
+        if ((error_reporting() & $errNo) === 0) {
             return false;
         }
 
