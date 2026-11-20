@@ -14,6 +14,7 @@
             "Sunqianhu\\Helper\\": "src/"
         }
     },
+    "bin": ["bin/sunqianhu_helper_install.php"],
     "authors": [
         {
             "name": "sun qian hu",
