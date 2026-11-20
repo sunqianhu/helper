@@ -1,8 +1,14 @@
 {
     "name": "sunqianhu/helper",
-    "description": "php助手类包含项目开发过程中各种常用的工具类",
+    "keywords": ["php", "helper", "utils", "database", "http", "image"],
+    "description": "PHP 常用工具库，提供数组、字符串、时间、数据库、HTTP、图片与文件处理助手",
     "type": "library",
     "license": "Apache-2.0",
+    "homepage": "https://github.com/sunqianhu/helper",
+    "support": {
+        "issues": "https://github.com/sunqianhu/helper/issues",
+        "source": "https://github.com/sunqianhu/helper"
+    },
     "autoload": {
         "psr-4": {
             "Sunqianhu\\Helper\\": "src/"
@@ -10,14 +16,16 @@
     },
     "authors": [
         {
-            "name": "sunqianhu",
+            "name": "sun qian hu",
             "email": "469661426@qq.com"
         }
     ],
     "require": {
+      "php": ">7.4",
       "ext-curl": "*",
       "ext-pdo": "*",
       "ext-gd": "*",
-      "ext-zip": "*"
+      "ext-zip": "*",
+      "ext-json": "*"
     }
 }
